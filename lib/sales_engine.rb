@@ -1,4 +1,3 @@
-require 'pry'
 class SalesEngine
   attr_reader :merchant_repository,
               :customer_repository,
@@ -24,11 +23,19 @@ class SalesEngine
     invoice_repository.objects.find_all{|invoice| invoice.send(attribute) == id}
   end
 
-  def find_transactions_by(id,attribute)
+  def find_transactions_by(id, attribute)
     transaction_repository.objects.find_all{|transaction| transaction.send(attribute) == id}
   end
 
   def find_invoice_items_by(id, attribute)
     invoice_item_repository.objects.find_all{|invoice_item| invoice_item.send(attribute) == id}
+  end
+
+  def find_customer_by(id, attribute)
+    customer_repository.objects.find{|customer| customer.send(attribute) == id}
+  end
+
+  def find_merchant_by(id, attribute)
+    merchant_repository.objects.find{|merchant| merchant.send(attribute) == id}
   end
 end
