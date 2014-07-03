@@ -19,19 +19,22 @@ class Invoice
   end
 
   def transactions
-    transaction_repository.objects.find_all{|transaction| transaction.invoice_id == id}
+    invoice_repository.find_transactions(id)
   end
 
-  # def invoice_items
-  #   invoice_item_repository.objects.find_all{|invoice_item| invoice_item.invoice_id == id}
-  # end
-  #
-  # def items
-  #   items_array = []
-  #   invoice_items.each do |invoice_item|
-  #     item = item_repository.objects.find {|item| item.id == invoice_item.item_id}
-  #     items_array << item unless item == nil
-  #   end
-  #   items_array
-  # end
+  def invoice_items
+    invoice_repository.find_invoice_items(id)
+  end
+
+  def items
+    invoice_repository.find_items(id)
+  end
+
+  def customer
+    invoice_repository.find_customer(customer_id)
+  end
+
+  def merchant
+    invoice_repository.find_merchant(merchant_id)
+  end
 end
