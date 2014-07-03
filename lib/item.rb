@@ -1,4 +1,6 @@
 class Item
+  include Parser
+
   attr_reader :id,
               :name,
               :description,
@@ -12,10 +14,10 @@ class Item
     @id               = data[:id]
     @name             = data[:name]
     @description      = data[:description]
-    @unit_price       = data[:unit_price]
+    @unit_price       = decimal(data[:unit_price])
     @merchant_id      = data[:merchant_id]
-    @created_at       = data[:created_at]
-    @updated_at       = data[:updated_at]
+    @created_at       = date(data[:created_at])
+    @updated_at       = date(data[:updated_at])
     @item_repository  = repo
   end
 

@@ -1,4 +1,5 @@
 require './test/test_helper'
+require 'bigdecimal'
 
 class TransactionTest < Minitest::Test
   attr_reader :transaction
@@ -26,11 +27,13 @@ class TransactionTest < Minitest::Test
   end
 
   def test_it_has_created_at_date
-    assert_equal '2012-03-27 14:54:09 UTC', transaction.created_at
+    created_at_date = Date.parse("2012-03-27")
+    assert_equal created_at_date, transaction.created_at
   end
 
   def test_it_has_updated_at_date
-    assert_equal '2012-03-27 14:54:09 UTC', transaction.updated_at
+    updated_at_date = Date.parse("2012-03-27")
+    assert_equal updated_at_date, transaction.updated_at
   end
 
   def test_it_has_invoices

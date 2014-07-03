@@ -14,7 +14,7 @@ class ItemRepositoryTest < Minitest::Test
 
   def test_it_finds_invoice_items
     invoice_items = item_repo.find_invoice_items("1")
-    assert_equal 1, invoice_items.count
+    assert_equal 2, invoice_items.count
     assert_kind_of InvoiceItem, invoice_items[0]
   end
 
@@ -34,12 +34,12 @@ class ItemRepositoryTest < Minitest::Test
   end
 
   def test_it_finds_by_unit_price
-    result = item_repo.find_by_unit_price('75107')
+    result = item_repo.find_by_unit_price(BigDecimal.new('75107'))
     assert_equal '1', result.id
   end
 
   def test_it_finds_all_by_unit_price
-    result = item_repo.find_all_by_unit_price('75107')
+    result = item_repo.find_all_by_unit_price(BigDecimal.new('75107'))
     assert_equal 1, result.count
   end
 

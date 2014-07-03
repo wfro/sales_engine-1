@@ -1,15 +1,18 @@
 class Merchant
+  include Parser
+
   attr_reader :id,
               :name,
               :created_at,
               :updated_at,
               :merchant_repository
+  attr_accessor :revenue
 
   def initialize(data, path='data', repo)
     @id                  = data[:id]
     @name                = data[:name]
-    @created_at          = data[:created_at]
-    @updated_at          = data[:updated_at]
+    @created_at          = date(data[:created_at])
+    @updated_at          = date(data[:updated_at])
     @merchant_repository = repo
 
   end

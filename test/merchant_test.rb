@@ -1,4 +1,5 @@
 require './test/test_helper'
+require 'bigdecimal'
 
 class MerchantTest < Minitest::Test
   attr_reader :merchant
@@ -22,11 +23,13 @@ class MerchantTest < Minitest::Test
   end
 
   def test_it_has_a_created_at_date
-    assert_equal "2012-03-27 14:53:59 UTC", merchant.created_at
+    created_at_date = Date.parse("2012-03-27")
+    assert_equal created_at_date, merchant.created_at
   end
 
   def test_it_has_an_updated_at_date
-    assert_equal "2012-03-27 14:53:59 UTC", merchant.updated_at
+    updated_at_date = Date.parse("2012-03-27")
+    assert_equal updated_at_date, merchant.updated_at
   end
 
   def test_it_has_items

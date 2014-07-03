@@ -22,9 +22,11 @@ class LoaderTest < Minitest::Test
     assert_equal '2', results.id
 
     results = loader[2]
-    assert_equal '2012-03-27 14:53:59 UTC', results.created_at
+    created_at_date = Date.parse("2012-03-27")
+    assert_equal created_at_date, results.created_at
 
     results = loader[3]
-    assert_equal '2012-03-27 14:53:59 UTC', results.updated_at
+    updated_at_date = Date.parse("2012-03-27")
+    assert_equal updated_at_date, results.updated_at
   end
 end

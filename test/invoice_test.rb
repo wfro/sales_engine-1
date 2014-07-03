@@ -32,11 +32,13 @@ class InvoiceTest < Minitest::Test
   end
 
   def test_it_has_a_create_at_date
-    assert_equal "2012-03-25 09:54:09 UTC", invoice.created_at
+    created_at_date = Date.parse("2012-03-25")
+    assert_equal created_at_date, invoice.created_at
   end
 
   def test_it_has_an_updated_at_date
-    assert_equal "2012-03-25 09:54:09 UTC", invoice.updated_at
+    updated_at_date = Date.parse("2012-03-25")
+    assert_equal updated_at_date, invoice.updated_at
   end
 
   def test_it_has_transactions

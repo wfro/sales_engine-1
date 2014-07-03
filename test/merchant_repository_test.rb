@@ -34,4 +34,15 @@ class MerchantRepositoryTest < Minitest::Test
     result = merchant_repo.find_all_by_name('Bernhard-Johns')
     assert_equal 1, result.count
   end
+
+  def test_it_finds_merchants_by_highest_revenue
+    engine = SalesEngine.new
+    engine.startup('./test/fixtures')
+    revenue_merchant_repo = MerchantRepository.from_file('./test/fixtures/most_revenue_merchant.csv', engine)
+
+    result = revenue_merchant_repo.most_revenue(3)
+    assert_equal 3, result.count
+    assert_kind_of Merchant, result[0]
+    assert result[0].revenue > result[1].revenue
+  end
 end

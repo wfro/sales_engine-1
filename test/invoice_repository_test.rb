@@ -47,7 +47,7 @@ class InvoiceRepositoryTest < Minitest::Test
 
   def test_it_finds_all_by_customer_id
     result = invoice_repo.find_all_by_customer_id('1')
-    assert_equal 8, result.count
+    assert_equal 16, result.count
   end
 
   def test_it_finds_by_merchant_id
@@ -67,6 +67,6 @@ class InvoiceRepositoryTest < Minitest::Test
 
   def test_it_finds_all_by_status
     result = invoice_repo.find_all_by_status('shipped')
-    assert_equal 11, result.count
+    assert_equal 19, result.count
   end
 end

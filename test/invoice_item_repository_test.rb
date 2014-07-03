@@ -32,27 +32,27 @@ class InvoiceItemRepositoryTest < Minitest::Test
 
   def test_it_finds_all_by_item_id
     result = invoice_item_repo.find_all_by_item_id('539')
-    assert_equal 1, result.count
+    assert_equal 2, result.count
   end
 
   def test_it_finds_by_quantity
-    result = invoice_item_repo.find_by_quantity('6')
+    result = invoice_item_repo.find_by_quantity(BigDecimal.new('6'))
     assert_equal '8', result.id
   end
 
   def test_it_finds_all_by_quantity
-    result = invoice_item_repo.find_all_by_quantity('6')
-    assert_equal 2, result.count
+    result = invoice_item_repo.find_all_by_quantity(BigDecimal.new('6'))
+    assert_equal 5, result.count
   end
 
   def test_it_finds_by_unit_price
-    result = invoice_item_repo.find_by_unit_price('23324')
+    result = invoice_item_repo.find_by_unit_price(BigDecimal.new('23324'))
     assert_equal '2', result.id
   end
 
   def test_it_finds_all_by_unit_price
-    result = invoice_item_repo.find_all_by_unit_price('23324')
-    assert_equal 1, result.count
+    result = invoice_item_repo.find_all_by_unit_price(BigDecimal.new('23324'))
+    assert_equal 2, result.count
   end
 
   def test_it_finds_by_invoice_id

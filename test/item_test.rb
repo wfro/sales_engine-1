@@ -1,4 +1,5 @@
 require './test/test_helper'
+require 'bigdecimal'
 
 class ItemTest < Minitest::Test
   attr_reader :item
@@ -25,7 +26,8 @@ class ItemTest < Minitest::Test
   end
 
   def test_it_has_a_unit_price
-    assert_equal '75107', item.unit_price
+    price = BigDecimal.new("75107")
+    assert_equal price, item.unit_price
   end
 
   def test_it_has_a_merchant_id
@@ -33,16 +35,18 @@ class ItemTest < Minitest::Test
   end
 
   def test_it_has_a_created_at_date
-    assert_equal '2012-03-27 14:53:59 UTC', item.created_at
+    created_at_date = Date.parse("2012-03-27")
+    assert_equal created_at_date, item.created_at
   end
 
   def test_it_has_a_updated_at_date
-    assert_equal '2012-03-27 14:53:59 UTC', item.updated_at
+    updated_at_date = Date.parse("2012-03-27")
+    assert_equal updated_at_date, item.updated_at
   end
 
   def test_it_has_invoice_items
     invoice_items = item.invoice_items
-    assert_equal 1, invoice_items.count
+    assert_equal 2, invoice_items.count
     assert_kind_of InvoiceItem, invoice_items[0]
   end
 

@@ -1,5 +1,6 @@
 require_relative 'test_helper'
-require 'pry'
+require './lib/parser'
+require 'bigdecimal'
 
 class InvoiceItemTest < Minitest::Test
   attr_reader :invoice_item
@@ -23,19 +24,23 @@ class InvoiceItemTest < Minitest::Test
   end
 
   def test_it_has_a_quantity
-    assert_equal '5', invoice_item.quantity
+    quant = BigDecimal.new('5')
+    assert_equal quant, invoice_item.quantity
   end
 
   def test_it_has_a_unit_price
-    assert_equal '13635', invoice_item.unit_price
+    price = BigDecimal.new('13635')
+    assert_equal price, invoice_item.unit_price
   end
 
   def test_it_has_created_at_date
-    assert_equal '2012-03-27 14:54:09 UTC', invoice_item.created_at
+    created_at_date = Date.parse("2012-03-27")
+    assert_equal created_at_date, invoice_item.created_at
   end
 
   def test_it_has_updated_at_date
-    assert_equal '2012-03-27 14:54:09 UTC', invoice_item.updated_at
+    updated_at_date = Date.parse("2012-03-27")
+    assert_equal updated_at_date, invoice_item.updated_at
   end
 
   def test_it_has_items
