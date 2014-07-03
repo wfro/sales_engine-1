@@ -21,4 +21,13 @@ class MerchantRepository
   def find_invoices(id)
     sales_engine.find_invoices_by(id, "merchant_id")
   end
+
+  def find_by_name(name)
+    objects.find {|object| object.name == name}
+  end
+
+  def find_all_by_name(name)
+    objects.find_all {|object| object.name == name}
+  end
+
 end

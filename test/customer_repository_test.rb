@@ -17,4 +17,24 @@ class CustomerRepositoryTest < Minitest::Test
     assert_equal 8, invoices.count
     assert_kind_of Invoice, invoices[0]
   end
+
+  def test_it_finds_by_first_name
+    result = customer_repo.find_by_first_name('Joey')
+    assert_equal '1', result.id
+  end
+
+  def test_it_finds_all_by_first_name
+    result = customer_repo.find_all_by_first_name('Joey')
+    assert_equal 1, result.count
+  end
+
+  def test_it_finds_by_last_name
+    result = customer_repo.find_by_last_name('Nader')
+    assert_equal '5', result.id
+  end
+
+  def test_it_finds_all_by_last_name
+    result = customer_repo.find_all_by_last_name('Nader')
+    assert_equal 1, result.count
+  end
 end

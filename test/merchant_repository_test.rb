@@ -24,4 +24,14 @@ class MerchantRepositoryTest < Minitest::Test
     assert_equal 1, invoices.count
     assert_kind_of Invoice, invoices[0]
   end
+
+  def test_it_finds_by_name
+    result = merchant_repo.find_by_name('Bernhard-Johns')
+    assert_equal '7', result.id
+  end
+
+  def test_it_finds_all_by_name
+    result = merchant_repo.find_all_by_name('Bernhard-Johns')
+    assert_equal 1, result.count
+  end
 end

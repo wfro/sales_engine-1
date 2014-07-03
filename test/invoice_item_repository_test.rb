@@ -24,4 +24,44 @@ class InvoiceItemRepositoryTest < Minitest::Test
     assert_equal 1, invoices.count
     assert_kind_of Invoice, invoices[0]
   end
+
+  def test_it_finds_by_item_id
+    result = invoice_item_repo.find_by_item_id('539')
+    assert_equal '1', result.id
+  end
+
+  def test_it_finds_all_by_item_id
+    result = invoice_item_repo.find_all_by_item_id('539')
+    assert_equal 1, result.count
+  end
+
+  def test_it_finds_by_quantity
+    result = invoice_item_repo.find_by_quantity('6')
+    assert_equal '8', result.id
+  end
+
+  def test_it_finds_all_by_quantity
+    result = invoice_item_repo.find_all_by_quantity('6')
+    assert_equal 2, result.count
+  end
+
+  def test_it_finds_by_unit_price
+    result = invoice_item_repo.find_by_unit_price('23324')
+    assert_equal '2', result.id
+  end
+
+  def test_it_finds_all_by_unit_price
+    result = invoice_item_repo.find_all_by_unit_price('23324')
+    assert_equal 1, result.count
+  end
+
+  def test_it_finds_by_invoice_id
+    result = invoice_item_repo.find_by_invoice_id('2')
+    assert_equal '9', result.id
+  end
+
+  def test_it_finds_all_by_invoice_id
+    result = invoice_item_repo.find_all_by_invoice_id('2')
+    assert_equal 1, result.count
+  end
 end

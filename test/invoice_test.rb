@@ -53,7 +53,7 @@ class InvoiceTest < Minitest::Test
 
   def test_it_has_items
     items = invoice.items
-    assert_equal 1, items.count
+    assert_equal 2, items.count
     assert_kind_of Item, items[0]
   end
 

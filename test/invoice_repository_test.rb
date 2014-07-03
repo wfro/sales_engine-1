@@ -26,7 +26,7 @@ class InvoiceRepositoryTest < Minitest::Test
 
   def test_it_finds_items
     items = invoice_repo.find_items('1')
-    assert_equal 1, items.count
+    assert_equal 2, items.count
     assert_kind_of Item, items[0]
   end
 
@@ -38,5 +38,35 @@ class InvoiceRepositoryTest < Minitest::Test
   def test_it_finds_a_merchant
     merchant = invoice_repo.find_merchant('26')
     assert_kind_of Merchant, merchant
+  end
+
+  def test_it_finds_by_customer_id
+    result = invoice_repo.find_by_customer_id('1')
+    assert_equal '1', result.id
+  end
+
+  def test_it_finds_all_by_customer_id
+    result = invoice_repo.find_all_by_customer_id('1')
+    assert_equal 8, result.count
+  end
+
+  def test_it_finds_by_merchant_id
+    result = invoice_repo.find_by_merchant_id('27')
+    assert_equal '9', result.id
+  end
+
+  def test_it_finds_all_by_merchant_id
+    result = invoice_repo.find_all_by_merchant_id('27')
+    assert_equal 1, result.count
+  end
+
+  def test_it_finds_by_status
+    result = invoice_repo.find_by_status('shipped')
+    assert_equal '1', result.id
+  end
+
+  def test_it_finds_all_by_status
+    result = invoice_repo.find_all_by_status('shipped')
+    assert_equal 11, result.count
   end
 end
