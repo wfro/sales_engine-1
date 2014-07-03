@@ -34,14 +34,25 @@ class SalesEngineTest < Minitest::Test
     assert_kind_of Invoice, invoices[0]
   end
 
+  def test_it_finds_transactions_by
+    transactions = sales_engine.find_transactions_by("1", "invoice_id")
+    assert_equal 1, transactions.count
+    assert_kind_of Transaction, transactions[0]
+  end
+
   def test_it_finds_invoice_items_by
-    invoice_items = sales_engine.find_invoice_items_by("1", "item_id" )
-    assert_equal 1, invoice_items.count
+    invoice_items = sales_engine.find_invoice_items_by("1", 'invoice_id')
+    assert_equal 8, invoice_items.count
     assert_kind_of InvoiceItem, invoice_items[0]
   end
 
-  def test_if_finds_merchant_by
-    merchant = sales_engine.find_merchant_by("1", "id")
+  def test_it_finds_a_customer_by
+    customer = sales_engine.find_customer_by('1', 'id')
+    assert_kind_of Customer, customer
+  end
+
+  def test_it_finds_a_merchant_by
+    merchant = sales_engine.find_merchant_by('26', 'id')
     assert_kind_of Merchant, merchant
   end
 end
