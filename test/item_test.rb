@@ -39,4 +39,15 @@ class ItemTest < Minitest::Test
   def test_it_has_a_updated_at_date
     assert_equal '2012-03-27 14:53:59 UTC', item.updated_at
   end
+
+  def test_it_has_invoice_items
+    invoice_items = item.invoice_items
+    assert_equal 1, invoice_items.count
+    assert_kind_of InvoiceItem, invoice_items[0]
+  end
+
+  def test_it_has_a_merchant
+    merchant = item.merchant
+    assert_kind_of Merchant, merchant
+  end
 end
