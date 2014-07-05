@@ -30,14 +30,18 @@ class MerchantRepository
     sales_engine.find_invoices_by(id, "merchant_id")
   end
 
-  def find_invoice_items(invoices)
+  def find_invoice_items_by_invoices(invoices)
     invoices.map{|invoice| sales_engine.find_invoice_items_by(invoice.id, "invoice_id").first}
+  end
+
+  def find_invoice_items(date)
+    sales_engine.find_invoice_items_by(date, "created_at")
   end
 
   def most_revenue(number_of_merchants)
     objects.each do |object|
       invoices = find_invoices(object.id)
-      invoice_items = find_invoice_items(invoices)
+      invoice_items = find_invoice_items_by_invoices(invoices)
       revenue = 0
       invoice_items.each {|invoice_item| revenue += (invoice_item.quantity * invoice_item.unit_price)}
       object.revenue = revenue
@@ -49,7 +53,7 @@ class MerchantRepository
   def most_items(number_of_merchants)
     objects.each do |object|
       invoices = find_invoices(object.id)
-      invoice_items = find_invoice_items(invoices)
+      invoice_items = find_invoice_items_by_invoices(invoices)
       items_sold = 0
       invoice_items.each {|invoice_item| items_sold += invoice_item.quantity}
       object.items_sold = items_sold
@@ -58,4 +62,8 @@ class MerchantRepository
       sorted[0...number_of_merchants]
   end
 
+  def revenue(date)
+    invoice_items = find_invoice_items(date)
+    invoice_items.reduce(0){|sum, invoice_item| sum + (invoice_item.quantity * invoice_item.unit_price)}
+  end
 end
