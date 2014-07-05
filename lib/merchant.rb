@@ -6,7 +6,7 @@ class Merchant
               :created_at,
               :updated_at,
               :merchant_repository
-  attr_accessor :revenue
+  attr_accessor :revenue, :items_sold
 
   def initialize(data, path='data', repo)
     @id                  = data[:id]

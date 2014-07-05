@@ -3,7 +3,7 @@ require 'pry'
 
 class MerchantRepository
   include Finder
-  def self.from_file(file_name='./data/merchants.csv', klass, engine)
+  def self.from_file(file_name= './data/merchants.csv', engine)
     merchants = Loader.read(file_name, Merchant, self)
     new(merchants, engine)
   end
@@ -43,6 +43,18 @@ class MerchantRepository
       object.revenue = revenue
     end
       sorted = objects.sort_by{|object| object.revenue}.reverse
+      sorted[0...number_of_merchants]
+  end
+
+  def most_items(number_of_merchants)
+    objects.each do |object|
+      invoices = find_invoices(object.id)
+      invoice_items = find_invoice_items(invoices)
+      items_sold = 0
+      invoice_items.each {|invoice_item| items_sold += invoice_item.quantity}
+      object.items_sold = items_sold
+    end
+      sorted = objects.sort_by{|object| object.items_sold}.reverse
       sorted[0...number_of_merchants]
   end
 
