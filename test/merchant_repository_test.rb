@@ -49,7 +49,7 @@ class MerchantRepositoryTest < Minitest::Test
 
     assert_equal 2, result.count
     assert_kind_of Merchant, result[0]
-    assert result[0].revenue > result[1].revenue
+    assert result[0].stored_revenue > result[1].stored_revenue
   end
 
   def test_it_finds_merchants_by_most_items
@@ -64,6 +64,11 @@ class MerchantRepositoryTest < Minitest::Test
     date = Date.parse("2012-03-27")
     revenue = business_intelligence_repo.revenue(date)
 
-    assert_equal BigDecimal.new("278091"), revenue
+    assert_equal BigDecimal.new("2780.91"), revenue
+  end
+
+  def test_it_finds_favorite_customer
+    customer = business_intelligence_repo.find_favorite_customer
+    assert_equal "Cecelia", customer.first_name
   end
 end
