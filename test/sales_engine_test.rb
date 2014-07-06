@@ -1,5 +1,6 @@
 require_relative 'test_helper'
 require_relative 'support/fake_sales_engine'
+require 'bigdecimal'
 
 class SalesEngineTest < Minitest::Test
   attr_reader :sales_engine
@@ -54,5 +55,16 @@ class SalesEngineTest < Minitest::Test
   def test_it_finds_a_merchant_by
     merchant = sales_engine.find_merchant_by('26', 'id')
     assert_kind_of Merchant, merchant
+  end
+
+  def test_it_doesnt_count_failed_transactions
+    business_intelligence_sales_engine = SalesEngine.new
+    business_intelligence_sales_engine.startup("test/fixtures/business_intelligence")
+
+    successful_transaction = business_intelligence_sales_engine.successful_transaction?('1', 'invoice_id')
+    unsuccessful_transaction = business_intelligence_sales_engine.successful_transaction?('2', 'invoice_id')
+
+    assert successful_transaction
+    refute unsuccessful_transaction
   end
 end

@@ -38,4 +38,8 @@ class Merchant
   def favorite_customer
     merchant_repository.find_favorite_customer(self)
   end
+
+  def customers_with_pending_invoices
+    merchant_repository.find_customers_with_pending_invoices(self)
+  end
 end

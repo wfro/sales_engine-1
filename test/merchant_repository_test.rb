@@ -8,7 +8,7 @@ class MerchantRepositoryTest < Minitest::Test
   def setup
     engine = SalesEngine.new
     engine.startup('./test/fixtures')
-    @merchant_repo = MerchantRepository.from_file('./test/fixtures/merchants.csv', engine)
+    @merchant_repo = engine.merchant_repository
   end
 
   def test_it_has_merchants
@@ -40,8 +40,7 @@ class MerchantRepositoryTest < Minitest::Test
   def business_intelligence_repo
     engine = SalesEngine.new
     engine.startup('./test/fixtures/business_intelligence')
-    most_items_merchant_repo = MerchantRepository.from_file('./test/fixtures/business_intelligence/merchants.csv', engine)
-
+    most_items_merchant_repo = engine.merchant_repository
   end
 
   def test_it_finds_merchants_by_highest_revenue
@@ -64,11 +63,18 @@ class MerchantRepositoryTest < Minitest::Test
     date = Date.parse("2012-03-27")
     revenue = business_intelligence_repo.revenue(date)
 
-    assert_equal BigDecimal.new("2780.91"), revenue
+    assert_equal BigDecimal.new("681.75"), revenue
   end
 
   def test_it_finds_favorite_customer
-    customer = business_intelligence_repo.find_favorite_customer
-    assert_equal "Cecelia", customer.first_name
+    merchant = business_intelligence_repo.objects[0]
+    customer = business_intelligence_repo.find_favorite_customer(merchant)
+    assert_equal "Joey", customer.first_name
+  end
+
+  def test_it_finds_customers_with_pending_invoices
+    merchant = business_intelligence_repo.objects[0]
+    customers = business_intelligence_repo.find_customers_with_pending_invoices(merchant)
+    assert_equal "Joey", customers[0].first_name
   end
 end
