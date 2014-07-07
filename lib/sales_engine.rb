@@ -1,3 +1,5 @@
+require 'pry'
+
 class SalesEngine
   attr_reader :merchant_repository,
               :customer_repository,
@@ -37,5 +39,9 @@ class SalesEngine
 
   def find_customer_by(id, attribute)
     customer_repository.objects.find{|customer| customer.send(attribute) == id}
+  end
+
+  def successful_transaction?(id, attribute)
+    find_transactions_by(id, attribute).any?{|transaction| transaction.result == "success"}
   end
 end

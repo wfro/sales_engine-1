@@ -1,5 +1,6 @@
 require './test/test_helper'
 require 'pry'
+require 'bigdecimal'
 
 class MerchantRepositoryTest < Minitest::Test
   attr_reader :merchant_repo
@@ -7,7 +8,7 @@ class MerchantRepositoryTest < Minitest::Test
   def setup
     engine = SalesEngine.new
     engine.startup('./test/fixtures')
-    @merchant_repo = MerchantRepository.from_file('./test/fixtures/merchants.csv', engine)
+    @merchant_repo = engine.merchant_repository
   end
 
   def test_it_has_merchants
@@ -36,26 +37,44 @@ class MerchantRepositoryTest < Minitest::Test
     assert_equal 2, result.count
   end
 
-  def test_it_finds_merchants_by_highest_revenue
+  def business_intelligence_repo
     engine = SalesEngine.new
     engine.startup('./test/fixtures/business_intelligence')
-    revenue_merchant_repo = MerchantRepository.from_file('./test/fixtures/business_intelligence/merchants.csv', engine)
+    most_items_merchant_repo = engine.merchant_repository
+  end
 
+  def test_it_finds_merchants_by_highest_revenue
+    result = business_intelligence_repo.most_revenue(2)
 
-    result = revenue_merchant_repo.most_revenue(2)
     assert_equal 2, result.count
     assert_kind_of Merchant, result[0]
-    assert result[0].revenue > result[1].revenue
+    assert result[0].stored_revenue > result[1].stored_revenue
   end
 
   def test_it_finds_merchants_by_most_items
-    engine = SalesEngine.new
-    engine.startup('./test/fixtures/business_intelligence')
-    most_items_merchant_repo = MerchantRepository.from_file('./test/fixtures/business_intelligence/merchants.csv', engine)
+    result = business_intelligence_repo.most_items(2)
 
-    result = most_items_merchant_repo.most_items(2)
     assert_equal 2, result.count
     assert_kind_of Merchant, result[0]
     assert result[0].items_sold > result[1].items_sold
+  end
+
+  def test_it_finds_revenue_by_date
+    date = Date.parse("2012-03-27")
+    revenue = business_intelligence_repo.revenue(date)
+
+    assert_equal BigDecimal.new("681.75"), revenue
+  end
+
+  def test_it_finds_favorite_customer
+    merchant = business_intelligence_repo.objects[0]
+    customer = business_intelligence_repo.find_favorite_customer(merchant)
+    assert_equal "Joey", customer.first_name
+  end
+
+  def test_it_finds_customers_with_pending_invoices
+    merchant = business_intelligence_repo.objects[0]
+    customers = business_intelligence_repo.find_customers_with_pending_invoices(merchant)
+    assert_equal "Joey", customers[0].first_name
   end
 end

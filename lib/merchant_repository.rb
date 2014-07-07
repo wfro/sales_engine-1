@@ -2,6 +2,7 @@ require './lib/finder'
 require 'pry'
 
 class MerchantRepository
+  include Parser
   include Finder
   def self.from_file(file_name= './data/merchants.csv', engine)
     merchants = Loader.read(file_name, Merchant, self)
@@ -26,30 +27,38 @@ class MerchantRepository
     sales_engine.find_items_by(id, "merchant_id")
   end
 
-  def find_invoices(id)
-    sales_engine.find_invoices_by(id, "merchant_id")
+  def find_invoices(id, attribute='merchant_id')
+    sales_engine.find_invoices_by(id, attribute)
   end
 
-  def find_invoice_items(invoices)
+  def find_invoice_items_by_invoices(invoices)
     invoices.map{|invoice| sales_engine.find_invoice_items_by(invoice.id, "invoice_id").first}
+  end
+
+  def find_invoice_items(date)
+    sales_engine.find_invoice_items_by(date, "created_at")
+  end
+
+  def find_revenue(merchant, search_by=merchant.id, attribute='merchant_id')
+    invoices = find_invoices(search_by, attribute).find_all{|invoice| sales_engine.successful_transaction?(invoice.id, 'invoice_id')}
+    invoice_items = find_invoice_items_by_invoices(invoices)
+    revenue = 0
+    invoice_items.each {|invoice_item| revenue += (invoice_item.quantity * invoice_item.unit_price)}
+    merchant.stored_revenue = revenue
   end
 
   def most_revenue(number_of_merchants)
     objects.each do |object|
-      invoices = find_invoices(object.id)
-      invoice_items = find_invoice_items(invoices)
-      revenue = 0
-      invoice_items.each {|invoice_item| revenue += (invoice_item.quantity * invoice_item.unit_price)}
-      object.revenue = revenue
+      find_revenue(object)
     end
-      sorted = objects.sort_by{|object| object.revenue}.reverse
+      sorted = objects.sort_by{|object| object.stored_revenue}.reverse
       sorted[0...number_of_merchants]
   end
 
   def most_items(number_of_merchants)
     objects.each do |object|
       invoices = find_invoices(object.id)
-      invoice_items = find_invoice_items(invoices)
+      invoice_items = find_invoice_items_by_invoices(invoices)
       items_sold = 0
       invoice_items.each {|invoice_item| items_sold += invoice_item.quantity}
       object.items_sold = items_sold
@@ -58,4 +67,37 @@ class MerchantRepository
       sorted[0...number_of_merchants]
   end
 
+  def revenue(date)
+    invoice_items = find_invoice_items(date).find_all{|invoice_item| sales_engine.successful_transaction?(invoice_item.invoice_id, 'invoice_id')}
+    found_revenue = invoice_items.reduce(0){|sum, invoice_item| sum + (invoice_item.quantity * invoice_item.unit_price)}
+    dollars(found_revenue)
+  end
+
+  def find_favorite_customer(merchant)
+   favorite_customer = ['', 0]
+   invoices = find_invoices(merchant.id).find_all{|invoice| sales_engine.successful_transaction?(invoice.id, 'invoice_id')}
+   customers = invoices.map {|invoice| sales_engine.find_customer_by(invoice.customer_id, 'id')}.uniq
+   customers.each do |customer|
+     invoices = find_invoices(customer.id, 'customer_id')
+     successes = invoices.count
+       if successes > favorite_customer[1]
+         favorite_customer = [customer, successes]
+       end
+     end
+     favorite_customer[0]
+   end
+
+  def find_customers_with_pending_invoices(merchant)
+     invoices = find_invoices(merchant.id)
+     customers = invoices.map {|invoice| sales_engine.find_customer_by(invoice.customer_id, 'id')}.uniq
+     pending_customers = []
+     customers.each do |customer|
+      invoices = find_invoices(customer.id, 'customer_id')
+      invoices.each do |invoice|
+        unless sales_engine.find_transactions_by(invoice.id, 'invoice_id')
+          pending_customers << customer
+       end
+     end
+   end
+  end
 end
