@@ -1,4 +1,5 @@
 require './test/test_helper'
+require 'pry'
 
 class CustomerRepositoryTest < Minitest::Test
   attr_reader :customer_repo
@@ -45,16 +46,16 @@ class CustomerRepositoryTest < Minitest::Test
   end
 
   def test_it_finds_transactions
-   business_intelligence
-   transactions = @business_intelligence_repo.find_transactions("2")
-   assert_kind_of Transaction, transactions[0]
-   assert_equal 1, transactions.count
- end
+    business_intelligence
+    transactions = @business_intelligence_repo.find_transactions("1")
+    assert_kind_of Transaction, transactions[0]
+    assert_equal 1, transactions.count
+  end
 
  def test_it_finds_favorite_merchant
-   skip
-   favorite_merchant = @business_intelligence_repo.find_favorite_merchant("2")
-   assert_kind_of Merchant, favorite_merchant[0]
-   assert_equal "Willms and Sons", favorite_merchant.name
+   business_intelligence
+   favorite_merchant = @business_intelligence_repo.find_favorite_merchant("1")
+   assert_kind_of Merchant, favorite_merchant
+   assert_equal "Klein, Rempel and Jones", favorite_merchant.name
  end
 end

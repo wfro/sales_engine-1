@@ -1,4 +1,5 @@
 require './lib/finder'
+require 'bigdecimal'
 
 class CustomerRepository
   include Finder
@@ -31,6 +32,12 @@ class CustomerRepository
     objects.find_all {|object| object.last_name == last_name}
   end
 
+  def find_successful_invoices(id)
+    find_invoices(id).find_all do |invoice|
+      sales_engine.successful_transaction?(invoice.id, 'invoice_id')
+    end
+  end
+
   def find_transactions(id)
    invoices = sales_engine.find_invoices_by(id, "customer_id")
    transactions = []
@@ -41,6 +48,14 @@ class CustomerRepository
   end
 
   def find_favorite_merchant(id)
-
+    invoices = find_successful_invoices(id)
+    hash = invoices.group_by {|invoice| invoice.merchant_id}
+    best_merchant = ['id', 0]
+    hash.each do |key, value|
+      if value.count > best_merchant[1]
+        best_merchant = [key, value]
+      end
+    end
+    sales_engine.find_merchant_by(best_merchant[0], 'id')
   end
 end

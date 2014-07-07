@@ -54,10 +54,9 @@ class CustomerTest < Minitest::Test
  end
 
  def test_it_finds_favorite_merchant
-   skip
    business_intelligence
    favorite_merchant = @business_intelligence_customer.favorite_merchant
-   assert_kind_of Merchant, favorite_merchant[0]
-   assert_equal "Willms and Sons", favorite_merchant.name
+   assert_kind_of Merchant, favorite_merchant
+   assert_equal "Klein, Rempel and Jones", favorite_merchant.name
  end
 end
