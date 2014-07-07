@@ -7,10 +7,7 @@ class ParserTest < Minitest::Test
   def setup
     engine = SalesEngine.new
     engine.startup("./test/fixtures")
-    @invoice_item = InvoiceItem.new({id: '1', item_id: '539', invoice_id: '1',
-      quantity: '5', unit_price: '13635', created_at: '2012-03-27 14:54:09 UTC',
-       updated_at: '2012-03-27 14:54:09 UTC'}, "test/fixtures",
-       InvoiceItemRepository.from_file('test/fixtures/invoice_items.csv', engine))
+    @invoice_item = engine.invoice_item_repository.objects[0]
   end
 
   def test_it_converts_to_big_decimal

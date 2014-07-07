@@ -2,15 +2,13 @@ require './lib/finder'
 
 class CustomerRepository
   include Finder
-  def self.from_file(file_name='./data/customers.csv', engine)
-    customers = Loader.read(file_name, Customer, self)
-    new(customers, engine)
-  end
 
-  attr_reader :objects, :sales_engine
-  def initialize(customers, engine)
-    @objects = customers
+  attr_reader   :sales_engine
+  attr_accessor :objects
+  def initialize(filename, engine)
+    @objects = []
     @sales_engine = engine
+    Loader.read(filename, Customer, self)
   end
 
   def find_invoices(id)
@@ -31,5 +29,18 @@ class CustomerRepository
 
   def find_all_by_last_name(last_name)
     objects.find_all {|object| object.last_name == last_name}
+  end
+
+  def find_transactions(id)
+   invoices = sales_engine.find_invoices_by(id, "customer_id")
+   transactions = []
+   invoices.each do |invoice|
+     transactions << sales_engine.find_transactions_by(invoice.id, "invoice_id")
+    end
+   transactions.flatten
+  end
+
+  def find_favorite_merchant(id)
+
   end
 end

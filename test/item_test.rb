@@ -1,12 +1,13 @@
 require './test/test_helper'
 require 'bigdecimal'
+require 'pry'
 
 class ItemTest < Minitest::Test
   attr_reader :item
   def setup
     engine = SalesEngine.new
     engine.startup("./test/fixtures")
-    @item = Item.new({id: '1',name: 'Item Qui Esse',description: 'Nihil autem sit odio inventore deleniti. Est laudantium ratione distinctio laborum. Minus voluptatem nesciunt assumenda dicta voluptatum porro.',unit_price: '75107',merchant_id: '1',created_at: '2012-03-27 14:53:59 UTC',updated_at: '2012-03-27 14:53:59 UTC'}, ItemRepository.from_file('test/fixtures/items.csv', engine))
+    @item = engine.item_repository.objects[0]
   end
 
   def test_it_exists
@@ -53,5 +54,24 @@ class ItemTest < Minitest::Test
   def test_it_has_a_merchant
     merchant = item.merchant
     assert_kind_of Merchant, merchant
+  end
+
+  def business_intelligence
+    engine = SalesEngine.new
+    engine.startup('./test/fixtures/business_intelligence')
+    @business_intelligence_item1 = engine.item_repository.objects[0]
+    @business_intelligence_item2 = engine.item_repository.objects[1]
+  end
+
+  def test_it_finds_best_day
+    business_intelligence
+    date_result1 = @business_intelligence_item1.best_day
+    date_result2 = @business_intelligence_item2.best_day
+
+    date1 = Date.parse("2012-03-27")
+    date2 = Date.parse("2012-03-14")
+
+    assert_equal date1, date_result1
+    assert_equal date2, date_result2
   end
 end

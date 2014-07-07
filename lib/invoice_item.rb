@@ -10,7 +10,7 @@ class InvoiceItem
               :updated_at,
               :invoice_item_repository
 
-  def initialize(data, path='data', repo)
+  def initialize(data, repo)
     @id                      = data[:id]
     @item_id                 = data[:item_id]
     @invoice_id              = data[:invoice_id]
@@ -19,6 +19,7 @@ class InvoiceItem
     @created_at              = date(data[:created_at])
     @updated_at              = date(data[:updated_at])
     @invoice_item_repository = repo
+    @invoice_item_repository.objects << self
   end
 
   def items

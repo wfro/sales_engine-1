@@ -10,15 +10,20 @@ class Item
               :updated_at,
               :item_repository
 
+  attr_accessor :revenue_generated, :number_sold
+
   def initialize(data, repo)
-    @id               = data[:id]
-    @name             = data[:name]
-    @description      = data[:description]
-    @unit_price       = decimal(data[:unit_price])
-    @merchant_id      = data[:merchant_id]
-    @created_at       = date(data[:created_at])
-    @updated_at       = date(data[:updated_at])
-    @item_repository  = repo
+    @id                 = data[:id]
+    @name               = data[:name]
+    @description        = data[:description]
+    @unit_price         = decimal(data[:unit_price])
+    @merchant_id        = data[:merchant_id]
+    @created_at         = date(data[:created_at])
+    @updated_at         = date(data[:updated_at])
+    @item_repository    = repo
+    @item_repository.objects << self
+    @revenue_generated  = item_repository.find_revenue_generated(self)
+    @number_sold        = item_repository.find_number_sold(self)
   end
 
   def invoice_items
@@ -27,5 +32,9 @@ class Item
 
   def merchant
     item_repository.find_merchant(merchant_id)
+  end
+
+  def best_day
+    item_repository.find_best_day(self)
   end
 end

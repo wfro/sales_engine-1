@@ -5,7 +5,7 @@ class CustomerRepositoryTest < Minitest::Test
   def setup
     engine = SalesEngine.new
     engine.startup("./test/fixtures")
-    @customer_repo = CustomerRepository.from_file('./test/fixtures/customers.csv', engine)
+    @customer_repo = engine.customer_repository
   end
 
   def test_it_has_customers
@@ -37,4 +37,24 @@ class CustomerRepositoryTest < Minitest::Test
     result = customer_repo.find_all_by_last_name('Nader')
     assert_equal 1, result.count
   end
+
+  def business_intelligence
+    engine = SalesEngine.new
+    engine.startup("./test/fixtures/business_intelligence")
+    @business_intelligence_repo = engine.customer_repository
+  end
+
+  def test_it_finds_transactions
+   business_intelligence
+   transactions = @business_intelligence_repo.find_transactions("2")
+   assert_kind_of Transaction, transactions[0]
+   assert_equal 1, transactions.count
+ end
+
+ def test_it_finds_favorite_merchant
+   skip
+   favorite_merchant = @business_intelligence_repo.find_favorite_merchant("2")
+   assert_kind_of Merchant, favorite_merchant[0]
+   assert_equal "Willms and Sons", favorite_merchant.name
+ end
 end

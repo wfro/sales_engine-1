@@ -7,7 +7,7 @@ class TransactionTest < Minitest::Test
   def setup
     engine = SalesEngine.new
     engine.startup("./test/fixtures")
-    @transaction = Transaction.new({id: '1', invoice_id: '1', credit_card_number: '4654405418249632', credit_card_expiration_date: '', result: 'success', created_at: '2012-03-27 14:54:09 UTC', updated_at: '2012-03-27 14:54:09 UTC'}, "test/fixtures", TransactionRepository.from_file("./test/fixtures/transactions.csv", engine))
+    @transaction = engine.transaction_repository.objects[0]
   end
 
   def test_it_has_an_id

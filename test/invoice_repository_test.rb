@@ -5,7 +5,7 @@ class InvoiceRepositoryTest < Minitest::Test
   def setup
     engine = SalesEngine.new
     engine.startup("./test/fixtures")
-    @invoice_repo = InvoiceRepository.from_file('./test/fixtures/invoices.csv', engine)
+    @invoice_repo = engine.invoice_repository
   end
 
   def test_it_has_invoices

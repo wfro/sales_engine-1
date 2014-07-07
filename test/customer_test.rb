@@ -5,7 +5,7 @@ class CustomerTest < Minitest::Test
   def setup
     engine = SalesEngine.new
     engine.startup("./test/fixtures")
-    @customer = Customer.new({id: "1", first_name: "Joey", last_name: "Ondricka", created_at: "2012-03-27 14:54:09 UTC" , updated_at: "2012-03-27 14:54:09 UTC"}, CustomerRepository.from_file('test/fixtures/customers.csv', engine))
+    @customer = engine.customer_repository.objects[0]
   end
 
   def test_it_exists
@@ -39,4 +39,25 @@ class CustomerTest < Minitest::Test
     assert_equal 16, invoices.count
     assert_kind_of Invoice, invoices[0]
   end
+
+  def business_intelligence
+    engine = SalesEngine.new
+    engine.startup("./test/fixtures/business_intelligence")
+    @business_intelligence_customer = engine.customer_repository.objects[0]
+  end
+
+  def test_it_finds_transactions
+   business_intelligence
+   transactions = @business_intelligence_customer.transactions
+   assert_kind_of Transaction, transactions[0]
+   assert_equal 1, transactions.count
+ end
+
+ def test_it_finds_favorite_merchant
+   skip
+   business_intelligence
+   favorite_merchant = @business_intelligence_customer.favorite_merchant
+   assert_kind_of Merchant, favorite_merchant[0]
+   assert_equal "Willms and Sons", favorite_merchant.name
+ end
 end
