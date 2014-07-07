@@ -1,7 +1,4 @@
-require './test/test_helper'
 require 'csv'
-require './lib/finder'
-require './test/support/everything'
 
 class FinderTest < Minitest::Test
   attr_reader :objects
