@@ -1,15 +1,12 @@
 class InvoiceItemRepository
   include Finder
 
-  def self.from_file(filename='./data/invoice_items.csv', engine)
-    invoice_items = Loader.read(filename, InvoiceItem, self)
-    new(invoice_items, engine)
-  end
-
-  attr_reader :objects, :sales_engine
-  def initialize(invoice_items, engine)
-    @objects = invoice_items
+  attr_reader   :sales_engine
+  attr_accessor :objects
+  def initialize(filename, engine)
+    @objects = []
     @sales_engine = engine
+    Loader.read(filename, InvoiceItem, self)
   end
 
   def find_items(item_id)

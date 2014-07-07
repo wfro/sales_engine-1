@@ -4,15 +4,13 @@ require 'pry'
 class MerchantRepository
   include Parser
   include Finder
-  def self.from_file(file_name= './data/merchants.csv', engine)
-    merchants = Loader.read(file_name, Merchant, self)
-    new(merchants, engine)
-  end
 
-  attr_reader :objects, :sales_engine
-  def initialize(merchants, engine)
-    @objects = merchants
+  attr_reader   :sales_engine
+  attr_accessor :objects
+  def initialize(filename, engine)
+    @objects = []
     @sales_engine = engine
+    Loader.read(filename, Merchant, self)
   end
 
   def find_by_name(name)
@@ -42,9 +40,8 @@ class MerchantRepository
   def find_revenue(merchant, search_by=merchant.id, attribute='merchant_id')
     invoices = find_invoices(search_by, attribute).find_all{|invoice| sales_engine.successful_transaction?(invoice.id, 'invoice_id')}
     invoice_items = find_invoice_items_by_invoices(invoices)
-    revenue = 0
-    invoice_items.each {|invoice_item| revenue += (invoice_item.quantity * invoice_item.unit_price)}
-    merchant.stored_revenue = revenue
+    invoice_items.each {|invoice_item| merchant.stored_revenue += (invoice_item.quantity * invoice_item.unit_price)}
+    merchant.stored_revenue
   end
 
   def most_revenue(number_of_merchants)
@@ -59,9 +56,7 @@ class MerchantRepository
     objects.each do |object|
       invoices = find_invoices(object.id)
       invoice_items = find_invoice_items_by_invoices(invoices)
-      items_sold = 0
-      invoice_items.each {|invoice_item| items_sold += invoice_item.quantity}
-      object.items_sold = items_sold
+      invoice_items.each {|invoice_item| object.items_sold += invoice_item.quantity}
     end
       sorted = objects.sort_by{|object| object.items_sold}.reverse
       sorted[0...number_of_merchants]

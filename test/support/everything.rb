@@ -33,19 +33,18 @@ class Everything
     @credit_card_number = data[:credit_card_number]
     @result      = data[:result]
     @everything_repo = repo
+    @everything_repo.objects << self
   end
 end
 
 class EverythingRepository
   include Finder
-  def self.from_file(file_name='./test/fixtures/everything.csv', klass, engine)
-    thing = Loader.read(file_name, Everything, self)
-    new(thing, engine)
-  end
 
-  attr_reader :objects, :sales_engine
-  def initialize(thing, engine)
-    @objects = thing
+  attr_reader   :sales_engine
+  attr_accessor :objects
+  def initialize(filename, engine)
+    @objects = []
     @sales_engine = engine
+    Loader.read(filename, Everything, self)
   end
 end

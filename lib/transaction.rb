@@ -9,7 +9,7 @@ class Transaction
               :updated_at,
               :transaction_repository
 
-  def initialize(data, path='data',repo)
+  def initialize(data,repo)
     @id                     = data[:id]
     @invoice_id             = data[:invoice_id]
     @credit_card_number     = data[:credit_card_number]
@@ -17,6 +17,7 @@ class Transaction
     @created_at             = date(data[:created_at])
     @updated_at             = date(data[:updated_at])
     @transaction_repository = repo
+    @transaction_repository.objects << self
   end
 
   def invoices

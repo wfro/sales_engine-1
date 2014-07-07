@@ -9,12 +9,12 @@ class SalesEngine
               :transaction_repository
 
   def startup(path='data')
-    @transaction_repository  = TransactionRepository.from_file("#{path}/transactions.csv", self)
-    @merchant_repository     = MerchantRepository.from_file("#{path}/merchants.csv", self)
-    @customer_repository     = CustomerRepository.from_file("#{path}/customers.csv",self)
-    @invoice_item_repository = InvoiceItemRepository.from_file("#{path}/invoice_items.csv", self)
-    @invoice_repository      = InvoiceRepository.from_file("#{path}/invoices.csv", self)
-    @item_repository         = ItemRepository.from_file("#{path}/items.csv", self)
+    @transaction_repository  = TransactionRepository.new("#{path}/transactions.csv", self)
+    @merchant_repository     = MerchantRepository.new("#{path}/merchants.csv", self)
+    @customer_repository     = CustomerRepository.new("#{path}/customers.csv",self)
+    @invoice_item_repository = InvoiceItemRepository.new("#{path}/invoice_items.csv", self)
+    @invoice_repository      = InvoiceRepository.new("#{path}/invoices.csv", self)
+    @item_repository         = ItemRepository.new("#{path}/items.csv", self)
   end
 
   def find_items_by(id, attribute)

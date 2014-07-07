@@ -7,7 +7,7 @@ class LoaderTest < Minitest::Test
   def setup
     engine = SalesEngine.new
     engine.startup("./test/fixtures")
-    @loader = Loader.read('test/fixtures/merchants.csv', Merchant, MerchantRepository.from_file('test/fixtures/merchants.csv', engine))
+    @loader = Loader.read('test/fixtures/merchants.csv', Merchant, engine.merchant_repository)
   end
 
   def test_it_exists

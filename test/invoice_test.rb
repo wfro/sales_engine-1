@@ -5,10 +5,7 @@ class InvoiceTest < Minitest::Test
   def setup
     engine = SalesEngine.new
     engine.startup("./test/fixtures")
-    data = {id: "1", customer_id: "1", merchant_id: "26", status: "shipped",
-      created_at: "2012-03-25 09:54:09 UTC", updated_at: "2012-03-25 09:54:09 UTC"}
-    repo = InvoiceRepository.from_file('test/fixtures/invoices.csv', engine)
-    @invoice = Invoice.new(data, "test/fixtures", repo)
+    @invoice = engine.invoice_repository.objects[0]
   end
 
   def test_it_exists

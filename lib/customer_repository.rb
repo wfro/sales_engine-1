@@ -1,16 +1,15 @@
 require './lib/finder'
+require 'bigdecimal'
 
 class CustomerRepository
   include Finder
-  def self.from_file(file_name='./data/customers.csv', engine)
-    customers = Loader.read(file_name, Customer, self)
-    new(customers, engine)
-  end
 
-  attr_reader :objects, :sales_engine
-  def initialize(customers, engine)
-    @objects = customers
+  attr_reader   :sales_engine
+  attr_accessor :objects
+  def initialize(filename, engine)
+    @objects = []
     @sales_engine = engine
+    Loader.read(filename, Customer, self)
   end
 
   def find_invoices(id)
@@ -31,5 +30,32 @@ class CustomerRepository
 
   def find_all_by_last_name(last_name)
     objects.find_all {|object| object.last_name == last_name}
+  end
+
+  def find_successful_invoices(id)
+    find_invoices(id).find_all do |invoice|
+      sales_engine.successful_transaction?(invoice.id, 'invoice_id')
+    end
+  end
+
+  def find_transactions(id)
+   invoices = sales_engine.find_invoices_by(id, "customer_id")
+   transactions = []
+   invoices.each do |invoice|
+     transactions << sales_engine.find_transactions_by(invoice.id, "invoice_id")
+    end
+   transactions.flatten
+  end
+
+  def find_favorite_merchant(id)
+    invoices = find_successful_invoices(id)
+    hash = invoices.group_by {|invoice| invoice.merchant_id}
+    best_merchant = ['id', 0]
+    hash.each do |key, value|
+      if value.count > best_merchant[1]
+        best_merchant = [key, value]
+      end
+    end
+    sales_engine.find_merchant_by(best_merchant[0], 'id')
   end
 end

@@ -6,7 +6,7 @@ class TransactionRepositoryTest < Minitest::Test
   def setup
     engine = SalesEngine.new
     engine.startup("./test/fixtures")
-    @transaction_repo = TransactionRepository.from_file('./test/fixtures/transactions.csv', engine)
+    @transaction_repo = engine.transaction_repository
   end
 
   def test_it_has_transactions

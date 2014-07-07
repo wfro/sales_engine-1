@@ -1,15 +1,12 @@
 class TransactionRepository
   include Finder
 
-  def self.from_file(filename='./data/transactions.csv', engine)
-    transactions = Loader.read(filename, Transaction, self)
-    new(transactions, engine)
-  end
-
-  attr_reader :objects, :sales_engine
-  def initialize(transactions, engine)
-    @objects      = transactions
+  attr_reader   :sales_engine
+  attr_accessor :objects
+  def initialize(filename, engine)
+    @objects      = []
     @sales_engine = engine
+    Loader.read(filename, Transaction, self)
   end
 
   def find_invoices(invoice_id)

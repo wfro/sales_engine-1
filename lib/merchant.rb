@@ -7,15 +7,18 @@ class Merchant
               :created_at,
               :updated_at,
               :merchant_repository
+
   attr_accessor :stored_revenue, :items_sold
 
-  def initialize(data, path='data', repo)
+  def initialize(data, repo)
     @id                  = data[:id]
     @name                = data[:name]
     @created_at          = date(data[:created_at])
     @updated_at          = date(data[:updated_at])
     @merchant_repository = repo
-
+    @merchant_repository.objects << self
+    @stored_revenue      = 0
+    @items_sold          = 0
   end
 
   def items
