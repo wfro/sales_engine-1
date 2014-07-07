@@ -38,12 +38,12 @@ class MerchantRepositoryTest < Minitest::Test
 
   def test_it_finds_merchants_by_highest_revenue
     engine = SalesEngine.new
-    engine.startup('./test/fixtures')
-    revenue_merchant_repo = MerchantRepository.from_file('./test/fixtures/merchants.csv', engine)
+    engine.startup('./test/fixtures/business_intelligence')
+    revenue_merchant_repo = MerchantRepository.from_file('./test/fixtures/business_intelligence/merchants.csv', engine)
 
 
-    result = revenue_merchant_repo.most_revenue(3)
-    assert_equal 3, result.count
+    result = revenue_merchant_repo.most_revenue(2)
+    assert_equal 2, result.count
     assert_kind_of Merchant, result[0]
     assert result[0].revenue > result[1].revenue
   end
