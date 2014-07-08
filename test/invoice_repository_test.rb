@@ -86,4 +86,6 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_equal 5, @business_intelligence_repo.objects.count
     assert_kind_of Invoice, result
   end
+
+  def 
 end

@@ -48,4 +48,11 @@ class SalesEngine
   def create_invoice(data)
     invoice = Invoice.new({id: (invoice_repository.objects.count + 1), customer_id: data[:customer].id, merchant_id: data[:merchant].id, status: data[:status], created_at: Time.new.to_s, updated_at: Time.new.to_s}, invoice_repository)
   end
+
+  def create_invoice_item(data)
+    item_hash = data[:items].group_by{|item| item.id}
+    item_hash.each do |key, value|
+      invoice_item = InvoiceItem.new({id: (invoice_item_repository.objects.count + 1), item_id: key, invoice_id: invoice_repository.objects.count, quantity: value.count, unit_price: value.find {|value| value}.unit_price, created_at: Time.new.to_s, updated_at: Time.new.to_s}, invoice_item_repository)
+    end
+  end
 end

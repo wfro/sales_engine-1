@@ -82,7 +82,8 @@ class SalesEngineTest < Minitest::Test
 
   def test_it_creates_invoice_items
     business_intelligence
-    result = @business_intelligence_engine.create_invoice_item({customer: @customer, merchant: @merchant, status: "shipped", items: @items})
-    assert_kind_of InvoiceItem, result
+    assert_equal 4, @business_intelligence_engine.invoice_item_repository.objects.count
+    result = @business_intelligence_engine.create_invoice_item({items: @items})
+    assert_equal 6, @business_intelligence_engine.invoice_item_repository.objects.count
   end
 end
