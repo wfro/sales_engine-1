@@ -62,4 +62,7 @@ class InvoiceRepository
     objects.find_all {|object| object.status == status}
   end
 
+  def create(data)
+    sales_engine.create_invoice(data)
+  end
 end

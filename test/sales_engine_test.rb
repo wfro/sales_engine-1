@@ -56,14 +56,33 @@ class SalesEngineTest < Minitest::Test
     assert_kind_of Merchant, merchant
   end
 
-  def test_it_doesnt_count_failed_transactions
-    business_intelligence_sales_engine = SalesEngine.new
-    business_intelligence_sales_engine.startup("test/fixtures/business_intelligence")
+  def business_intelligence
+    engine = SalesEngine.new
+    engine.startup('test/fixtures/business_intelligence')
+    @business_intelligence_engine = engine
+    @customer = engine.customer_repository.random
+    @merchant = engine.merchant_repository.random
+    @items    = (1..3).map {engine.item_repository.random}
+  end
 
-    successful_transaction = business_intelligence_sales_engine.successful_transaction?('1', 'invoice_id')
-    unsuccessful_transaction = business_intelligence_sales_engine.successful_transaction?('2', 'invoice_id')
+  def test_it_doesnt_count_failed_transactions
+    business_intelligence
+    successful_transaction = @business_intelligence_engine.successful_transaction?('1', 'invoice_id')
+    unsuccessful_transaction = @business_intelligence_engine.successful_transaction?('2', 'invoice_id')
 
     assert successful_transaction
     refute unsuccessful_transaction
+  end
+
+  def test_it_creates_an_invoice
+    business_intelligence
+    result = @business_intelligence_engine.create_invoice({customer: @customer, merchant: @merchant, status: "shipped", items: @items})
+    assert_kind_of Invoice, result
+  end
+
+  def test_it_creates_invoice_items
+    business_intelligence
+    result = @business_intelligence_engine.create_invoice_item({customer: @customer, merchant: @merchant, status: "shipped", items: @items})
+    assert_kind_of InvoiceItem, result
   end
 end

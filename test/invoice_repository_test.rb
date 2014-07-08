@@ -69,4 +69,21 @@ class InvoiceRepositoryTest < Minitest::Test
     result = invoice_repo.find_all_by_status('shipped')
     assert_equal 19, result.count
   end
+
+  def business_intelligence
+    engine = SalesEngine.new
+    engine.startup('test/fixtures/business_intelligence')
+    @business_intelligence_repo = engine.invoice_repository
+    @customer = engine.customer_repository.random
+    @merchant = engine.merchant_repository.random
+    @items    = (1..3).map {engine.item_repository.random}
+  end
+
+  def test_it_creates_an_invoice
+    business_intelligence
+    assert_equal 4, @business_intelligence_repo.objects.count
+    result = @business_intelligence_repo.create({customer: @customer, merchant: @merchant, status: "shipped", items: @items})
+    assert_equal 5, @business_intelligence_repo.objects.count
+    assert_kind_of Invoice, result
+  end
 end

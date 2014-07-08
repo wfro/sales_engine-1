@@ -44,4 +44,8 @@ class SalesEngine
   def successful_transaction?(id, attribute)
     find_transactions_by(id, attribute).any?{|transaction| transaction.result == "success"}
   end
+
+  def create_invoice(data)
+    invoice = Invoice.new({id: (invoice_repository.objects.count + 1), customer_id: data[:customer].id, merchant_id: data[:merchant].id, status: data[:status], created_at: Time.new.to_s, updated_at: Time.new.to_s}, invoice_repository)
+  end
 end
