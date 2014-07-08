@@ -1,4 +1,14 @@
-require 'pry'
+# require_relative './lib_helper'
+require_relative './transaction_repository'
+require_relative './customer_repository'
+require_relative './invoice_item_repository'
+require_relative './invoice_repository'
+require_relative './item_repository'
+require_relative './merchant_repository'
+
+require 'csv'
+require 'bigdecimal'
+
 
 class SalesEngine
   attr_reader :merchant_repository,
@@ -7,6 +17,8 @@ class SalesEngine
               :invoice_repository,
               :item_repository,
               :transaction_repository
+  def initialize(path)
+  end
 
   def startup(path='data')
     @transaction_repository  = TransactionRepository.new("#{path}/transactions.csv", self)

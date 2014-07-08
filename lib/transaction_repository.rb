@@ -1,3 +1,7 @@
+require_relative './finder'
+require_relative './loader'
+require_relative './transaction'
+
 class TransactionRepository
   include Finder
 

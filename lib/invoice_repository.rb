@@ -1,4 +1,6 @@
-require './lib/finder'
+require_relative './finder'
+require_relative './loader'
+require_relative './invoice'
 
 class InvoiceRepository
   include Finder

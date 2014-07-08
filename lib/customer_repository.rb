@@ -1,5 +1,6 @@
-require './lib/finder'
-require 'bigdecimal'
+require_relative './finder'
+require_relative './loader'
+require_relative './customer'
 
 class CustomerRepository
   include Finder

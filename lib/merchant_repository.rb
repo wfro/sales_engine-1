@@ -1,8 +1,8 @@
-require './lib/finder'
-require 'pry'
+require_relative './finder'
+require_relative './loader'
+require_relative './merchant'
 
 class MerchantRepository
-  include Parser
   include Finder
 
   attr_reader   :sales_engine

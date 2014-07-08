@@ -1,4 +1,5 @@
-require 'pry'
+require_relative './parser'
+
 class Invoice
   include Parser
 

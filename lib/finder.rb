@@ -1,4 +1,8 @@
 module Finder
+  def inspect
+    "#<#{self.class} #{@objects.size} rows>"
+  end
+
   def random
     objects.sample
   end

@@ -1,3 +1,5 @@
+require_relative './parser'
+
 class Transaction
   include Parser
 

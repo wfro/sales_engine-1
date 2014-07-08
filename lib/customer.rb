@@ -1,4 +1,5 @@
-require 'parser'
+require_relative './parser'
+
 class Customer
   include Parser
 
