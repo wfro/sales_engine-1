@@ -86,4 +86,11 @@ class SalesEngineTest < Minitest::Test
     result = @business_intelligence_engine.create_invoice_item({items: @items})
     assert_equal 6, @business_intelligence_engine.invoice_item_repository.objects.count
   end
+
+  def test_it_creates_a_transaction
+    business_intelligence
+    assert_equal 2, @business_intelligence_engine.transaction_repository.objects.count
+    result = @business_intelligence_engine.create_transaction({credit_card_number: "4444333322221111", expiration_date: "10-13", result: "success"}, "5")
+    assert_equal 3, @business_intelligence_engine.transaction_repository.objects.count
+  end
 end

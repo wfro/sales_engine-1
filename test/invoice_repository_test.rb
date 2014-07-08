@@ -74,6 +74,7 @@ class InvoiceRepositoryTest < Minitest::Test
     engine = SalesEngine.new
     engine.startup('test/fixtures/business_intelligence')
     @business_intelligence_repo = engine.invoice_repository
+    @transaction_business_intelligence_repo = engine.transaction_repository
     @customer = engine.customer_repository.random
     @merchant = engine.merchant_repository.random
     @items    = (1..3).map {engine.item_repository.random}
@@ -87,5 +88,10 @@ class InvoiceRepositoryTest < Minitest::Test
     assert_kind_of Invoice, result
   end
 
-  def 
+  def test_it_creates_a_transaction
+    business_intelligence
+    assert_equal 2, @transaction_business_intelligence_repo.objects.count
+    result = @business_intelligence_repo.charge({credit_card_number: "4444333322221111", expiration_date: "10-13", result: "success"}, "5")
+    assert_equal 3, @transaction_business_intelligence_repo.objects.count
+  end
 end

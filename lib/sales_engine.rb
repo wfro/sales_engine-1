@@ -55,4 +55,8 @@ class SalesEngine
       invoice_item = InvoiceItem.new({id: (invoice_item_repository.objects.count + 1), item_id: key, invoice_id: invoice_repository.objects.count, quantity: value.count, unit_price: value.find {|value| value}.unit_price, created_at: Time.new.to_s, updated_at: Time.new.to_s}, invoice_item_repository)
     end
   end
+
+  def create_transaction(data, id)
+    transaction = Transaction.new({id: (transaction_repository.objects.count +1), invoice_id: id, credit_card_number: data[:credit_card_number], result: data[:result], created_at: Time.new.to_s, updated_at: Time.new.to_s}, transaction_repository)
+  end
 end

@@ -65,4 +65,8 @@ class InvoiceRepository
   def create(data)
     sales_engine.create_invoice(data)
   end
+
+  def charge(data, id)
+    sales_engine.create_transaction(data, id)
+  end
 end
