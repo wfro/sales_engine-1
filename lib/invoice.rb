@@ -19,7 +19,6 @@ class Invoice
     @created_at         = date(data[:created_at])
     @updated_at         = date(data[:updated_at])
     @invoice_repository = repo
-    @invoice_repository.objects << self
   end
 
   def transactions

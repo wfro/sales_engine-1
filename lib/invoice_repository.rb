@@ -8,9 +8,8 @@ class InvoiceRepository
   attr_reader   :sales_engine
   attr_accessor :objects
   def initialize(filename, engine)
-    @objects = []
     @sales_engine = engine
-    Loader.read(filename, Invoice, self)
+    @objects = Loader.read(filename, Invoice, self).to_a
   end
 
   def find_transactions(id)

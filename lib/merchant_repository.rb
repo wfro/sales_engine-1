@@ -9,9 +9,8 @@ class MerchantRepository
   attr_reader   :sales_engine
   attr_accessor :objects
   def initialize(filename, engine)
-    @objects = []
     @sales_engine = engine
-    Loader.read(filename, Merchant, self)
+    @objects = Loader.read(filename, Merchant, self).to_a
   end
 
   def find_by_name(name)

@@ -21,7 +21,6 @@ class InvoiceItem
     @created_at              = date(data[:created_at])
     @updated_at              = date(data[:updated_at])
     @invoice_item_repository = repo
-    @invoice_item_repository.objects << self
   end
 
   def items

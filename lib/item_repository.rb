@@ -8,9 +8,8 @@ class ItemRepository
   attr_reader   :sales_engine
   attr_accessor :objects
   def initialize(filename, engine)
-    @objects      = []
     @sales_engine  = engine
-    Loader.read(filename, Item, self)
+    @objects = Loader.read(filename, Item, self).to_a
   end
 
   def find_invoice_items(id)
