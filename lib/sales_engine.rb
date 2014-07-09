@@ -57,7 +57,7 @@ class SalesEngine
   end
 
   def successful_transaction?(id, attribute)
-    transaction_repository = find_transactions_by(id, attribute).any?{|transaction| transaction.result == "success"}
+    find_transactions_by(id, attribute).any?{|transaction| transaction.result == "success"}
   end
 
   def create_invoice(data)

@@ -69,8 +69,12 @@ class MerchantRepository
   end
 
   def revenue(date)
-    invoice_items = find_invoice_items(date).find_all{|invoice_item| sales_engine.successful_transaction?(invoice_item.invoice_id, 'invoice_id')}
-    found_revenue = invoice_items.reduce(0){|sum, invoice_item| sum + (invoice_item.quantity * invoice_item.unit_price)}
+    invoices = find_invoices(date, 'created_at').find_all { |invoice|
+      sales_engine.successful_transaction?(invoice.id, 'invoice_id')
+    }
+    found_revenue = invoices.reduce(0){|sum, invoice|
+      sum + invoice.invoice_items.reduce(0) { |sum, invoice_item| sum + (invoice_item.quantity * invoice_item.unit_price)}
+    }
     dollars(found_revenue)
   end
 
