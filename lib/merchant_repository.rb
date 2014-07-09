@@ -4,6 +4,7 @@ require_relative './merchant'
 
 class MerchantRepository
   include Finder
+  include Parser
 
   attr_reader   :sales_engine
   attr_accessor :objects

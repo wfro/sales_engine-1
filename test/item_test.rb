@@ -5,7 +5,7 @@ require 'pry'
 class ItemTest < Minitest::Test
   attr_reader :item
   def setup
-    engine = SalesEngine.new
+    engine = SalesEngine.new('./test/fixtures')
     engine.startup("./test/fixtures")
     @item = engine.item_repository.objects[0]
   end
@@ -57,7 +57,7 @@ class ItemTest < Minitest::Test
   end
 
   def business_intelligence
-    engine = SalesEngine.new
+    engine = SalesEngine.new('./test/fixtures/business_intelligence')
     engine.startup('./test/fixtures/business_intelligence')
     @business_intelligence_item1 = engine.item_repository.objects[0]
     @business_intelligence_item2 = engine.item_repository.objects[1]

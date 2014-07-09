@@ -3,7 +3,7 @@ require 'csv'
 class FinderTest < Minitest::Test
   attr_reader :objects
   def setup
-    engine = SalesEngine.new
+    engine = SalesEngine.new('./test/fixtures')
     engine.startup("./test/fixtures")
     @objects = engine.merchant_repository
   end

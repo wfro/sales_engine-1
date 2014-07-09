@@ -3,7 +3,7 @@ require './test/test_helper'
 class InvoiceRepositoryTest < Minitest::Test
   attr_reader :invoice_repo
   def setup
-    engine = SalesEngine.new
+    engine = SalesEngine.new('./test/fixtures')
     engine.startup("./test/fixtures")
     @invoice_repo = engine.invoice_repository
   end
@@ -71,7 +71,7 @@ class InvoiceRepositoryTest < Minitest::Test
   end
 
   def business_intelligence
-    engine = SalesEngine.new
+    engine = SalesEngine.new("./test/fixtures/business_intelligence")
     engine.startup('test/fixtures/business_intelligence')
     @business_intelligence_repo = engine.invoice_repository
     @transaction_business_intelligence_repo = engine.transaction_repository

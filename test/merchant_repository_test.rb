@@ -6,7 +6,7 @@ class MerchantRepositoryTest < Minitest::Test
   attr_reader :merchant_repo
 
   def setup
-    engine = SalesEngine.new
+    engine = SalesEngine.new('./test/fixtures')
     engine.startup('./test/fixtures')
     @merchant_repo = engine.merchant_repository
   end
@@ -38,7 +38,7 @@ class MerchantRepositoryTest < Minitest::Test
   end
 
   def business_intelligence_repo
-    engine = SalesEngine.new
+    engine = SalesEngine.new("./test/fixtures/business_intelligence")
     engine.startup('./test/fixtures/business_intelligence')
     most_items_merchant_repo = engine.merchant_repository
   end

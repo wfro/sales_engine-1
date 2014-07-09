@@ -4,7 +4,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
   attr_reader :invoice_item_repo
 
   def setup
-    engine = SalesEngine.new
+    engine = SalesEngine.new('./test/fixtures')
     engine.startup("./test/fixtures")
     @invoice_item_repo = engine.invoice_item_repository
   end

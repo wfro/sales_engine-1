@@ -5,7 +5,7 @@ class SalesEngineTest < Minitest::Test
   attr_reader :sales_engine
 
   def setup
-    @sales_engine = SalesEngine.new
+    @sales_engine = SalesEngine.new('./test/fixtures')
     sales_engine.startup("test/fixtures")
   end
 
@@ -57,7 +57,7 @@ class SalesEngineTest < Minitest::Test
   end
 
   def business_intelligence
-    engine = SalesEngine.new
+    engine = SalesEngine.new("./test/fixtures/business_intelligence")
     engine.startup('test/fixtures/business_intelligence')
     @business_intelligence_engine = engine
     @customer = engine.customer_repository.random

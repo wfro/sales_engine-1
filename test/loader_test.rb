@@ -5,7 +5,7 @@ require 'csv'
 class LoaderTest < Minitest::Test
   attr_reader :loader
   def setup
-    engine = SalesEngine.new
+    engine = SalesEngine.new('./test/fixtures')
     engine.startup("./test/fixtures")
     @loader = Loader.read('test/fixtures/merchants.csv', Merchant, engine.merchant_repository)
   end
