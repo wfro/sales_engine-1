@@ -12,9 +12,9 @@ class Invoice
               :invoice_repository
 
   def initialize(data, repo)
-    @id                 = data[:id]
-    @customer_id        = data[:customer_id]
-    @merchant_id        = data[:merchant_id]
+    @id                 = data[:id].to_i
+    @customer_id        = data[:customer_id].to_i
+    @merchant_id        = data[:merchant_id].to_i
     @status             = data[:status]
     @created_at         = date(data[:created_at])
     @updated_at         = date(data[:updated_at])

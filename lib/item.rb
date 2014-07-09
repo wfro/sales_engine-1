@@ -15,11 +15,11 @@ class Item
   attr_accessor :revenue_generated, :number_sold
 
   def initialize(data, repo)
-    @id                 = data[:id]
+    @id                 = data[:id].to_i
     @name               = data[:name]
     @description        = data[:description]
     @unit_price         = decimal(data[:unit_price])
-    @merchant_id        = data[:merchant_id]
+    @merchant_id        = data[:merchant_id].to_i
     @created_at         = date(data[:created_at])
     @updated_at         = date(data[:updated_at])
     @item_repository    = repo

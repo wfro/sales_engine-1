@@ -13,9 +13,9 @@ class InvoiceItem
               :invoice_item_repository
 
   def initialize(data, repo)
-    @id                      = data[:id]
-    @item_id                 = data[:item_id]
-    @invoice_id              = data[:invoice_id]
+    @id                      = data[:id].to_i
+    @item_id                 = data[:item_id].to_i
+    @invoice_id              = data[:invoice_id].to_i
     @quantity                = decimal(data[:quantity])
     @unit_price              = decimal(data[:unit_price])
     @created_at              = date(data[:created_at])
@@ -23,11 +23,11 @@ class InvoiceItem
     @invoice_item_repository = repo
   end
 
-  def items
-    invoice_item_repository.find_items(item_id)
+  def item
+    invoice_item_repository.find_items(item_id).first
   end
 
-  def invoices
-    invoice_item_repository.find_invoices(invoice_id)
+  def invoice
+    invoice_item_repository.find_invoices(invoice_id).first
   end
 end

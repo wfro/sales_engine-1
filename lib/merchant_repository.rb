@@ -37,6 +37,12 @@ class MerchantRepository
     sales_engine.find_invoice_items_by(date, "created_at")
   end
 
+  def find_successful_invoices(id, attribute)
+    find_invoices(id).find_all do |invoice|
+      sales_engine.successful_transaction?(invoice.id, 'invoice_id')
+    end
+  end
+
   def find_revenue(merchant, search_by=merchant.id, attribute='merchant_id')
     invoices = find_invoices(search_by, attribute).find_all{|invoice| sales_engine.successful_transaction?(invoice.id, 'invoice_id')}
     invoice_items = find_invoice_items_by_invoices(invoices)
@@ -54,7 +60,7 @@ class MerchantRepository
 
   def most_items(number_of_merchants)
     objects.each do |object|
-      invoices = find_invoices(object.id)
+      invoices = find_successful_invoices(object.id)
       invoice_items = find_invoice_items_by_invoices(invoices)
       invoice_items.each {|invoice_item| object.items_sold += invoice_item.quantity}
     end
@@ -83,16 +89,18 @@ class MerchantRepository
    end
 
   def find_customers_with_pending_invoices(merchant)
-     invoices = find_invoices(merchant.id)
-     customers = invoices.map {|invoice| sales_engine.find_customer_by(invoice.customer_id, 'id')}.uniq
-     pending_customers = []
-     customers.each do |customer|
-      invoices = find_invoices(customer.id, 'customer_id')
-      invoices.each do |invoice|
-        unless sales_engine.find_transactions_by(invoice.id, 'invoice_id')
-          pending_customers << customer
-       end
-     end
-   end
+    invoices = find_invoices(merchant.id)
+    customers = invoices.map { |invoice| sales_engine.find_customer_by(invoice.customer_id, 'id')}
+    pending_customers = []
+    customers.each do |customer|
+      customer_invoices = invoices.find_all { |invoice| invoice.customer_id == customer.id }
+      customer_invoices.each do |invoice|
+        transactions = sales_engine.find_transactions_by(invoice.id, 'invoice_id')
+        if transactions.empty? || transactions.none? {|transaction| transaction.result == "success"}
+           pending_customers << customer
+        end
+      end
+    end
+   pending_customers
   end
 end

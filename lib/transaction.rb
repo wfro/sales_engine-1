@@ -12,8 +12,8 @@ class Transaction
               :transaction_repository
 
   def initialize(data,repo)
-    @id                     = data[:id]
-    @invoice_id             = data[:invoice_id]
+    @id                     = data[:id].to_i
+    @invoice_id             = data[:invoice_id].to_i
     @credit_card_number     = data[:credit_card_number]
     @result                 = data[:result]
     @created_at             = date(data[:created_at])
@@ -21,7 +21,7 @@ class Transaction
     @transaction_repository = repo
   end
 
-  def invoices
-    transaction_repository.find_invoices(id)
+  def invoice
+    transaction_repository.find_invoices(id).last
   end
 end

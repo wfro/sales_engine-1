@@ -12,7 +12,7 @@ class Merchant
   attr_accessor :stored_revenue, :items_sold
 
   def initialize(data, repo)
-    @id                  = data[:id]
+    @id                  = data[:id].to_i
     @name                = data[:name]
     @created_at          = date(data[:created_at])
     @updated_at          = date(data[:updated_at])

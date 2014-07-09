@@ -12,4 +12,8 @@ module Parser
     new_number = sprintf("%.02f", number)
     decimal(new_number)
   end
+
+  def cents(dollars)
+    dollars * 100
+  end
 end

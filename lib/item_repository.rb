@@ -4,6 +4,7 @@ require_relative './item'
 
 class ItemRepository
   include Finder
+  include Parser
 
   attr_reader   :sales_engine
   attr_accessor :objects
@@ -28,11 +29,13 @@ class ItemRepository
     objects.find_all {|object| object.name == name}
   end
 
-  def find_by_unit_price(unit_price)
+  def find_by_unit_price(dollars)
+    unit_price = cents(dollars)
     objects.find {|object| object.unit_price == unit_price}
   end
 
   def find_all_by_unit_price(unit_price)
+    unit_price = cents(dollars)
     objects.find_all {|object| object.unit_price == unit_price}
   end
 
@@ -74,7 +77,7 @@ class ItemRepository
 
   def sort_by(x, attribute)
     objects.sort_by {|object| object.send(attribute)}.reverse
-    objects[0..x]
+    objects[0...x]
   end
 
   def find_best_day(item)
