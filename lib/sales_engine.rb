@@ -23,11 +23,11 @@ class SalesEngine
   end
 
   def startup(path='data')
+    @invoice_repository      = InvoiceRepository.new("#{path}/invoices.csv", self)
+    @invoice_item_repository = InvoiceItemRepository.new("#{path}/invoice_items.csv", self)
     @transaction_repository  = TransactionRepository.new("#{path}/transactions.csv", self)
     @merchant_repository     = MerchantRepository.new("#{path}/merchants.csv", self)
     @customer_repository     = CustomerRepository.new("#{path}/customers.csv",self)
-    @invoice_item_repository = InvoiceItemRepository.new("#{path}/invoice_items.csv", self)
-    @invoice_repository      = InvoiceRepository.new("#{path}/invoices.csv", self)
     @item_repository         = ItemRepository.new("#{path}/items.csv", self)
   end
 

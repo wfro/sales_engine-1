@@ -22,6 +22,6 @@ class Transaction
   end
 
   def invoice
-    transaction_repository.find_invoices(id).last
+    transaction_repository.find_invoices(invoice_id).first
   end
 end

@@ -64,8 +64,6 @@ class ItemRepositoryTest < Minitest::Test
   def test_it_finds_items_with_most_revenue_generated
     business_intelligence
     results = @business_intelligence_repo.most_revenue(2)
-    # binding.pry
-
     assert_equal 2, results.count
     assert results[0].revenue_generated > results[1].revenue_generated
   end
@@ -73,7 +71,6 @@ class ItemRepositoryTest < Minitest::Test
   def test_it_finds_most_items_sold
     business_intelligence
     results = @business_intelligence_repo.most_items(2)
-    # binding.pry
 
     assert_equal 2, results.count
     assert results[0].number_sold > results[1].number_sold

@@ -43,48 +43,76 @@ class MerchantRepository
     end
   end
 
+  def find_items_sold(merchant)
+    invoices = find_successful_invoices(merchant.id, 'id')
+    merchant.items_sold = invoices.reduce(0) do |sum, invoice|
+      sum + invoice.invoice_items.reduce(0) do |sum, invoice_item|
+        sum + invoice_item.quantity
+      end
+    end
+
+    # invoice_items = find_invoice_items_by_invoices(invoices)
+    # merchant.items_sold = invoice_items.reduce(0) do |sum, invoice_item|
+    #   sum += invoice_item.quantity
+    # end
+  end
+
   def find_revenue(merchant, search_by=merchant.id, attribute='merchant_id')
     invoices = find_invoices(search_by, attribute).find_all{|invoice| sales_engine.successful_transaction?(invoice.id, 'invoice_id')}
-    invoice_items = find_invoice_items_by_invoices(invoices)
-    invoice_items.each {|invoice_item| merchant.stored_revenue += (invoice_item.quantity * invoice_item.unit_price)}
-    merchant.stored_revenue
+    merchant.stored_revenue = invoices.reduce(0) do |sum, invoice|
+      sum + invoice.invoice_items.reduce(0) do |sum, invoice_item|
+        sum + (invoice_item.quantity * invoice_item.unit_price)
+      end
+    end
+    # invoice_items = find_invoice_items_by_invoices(invoices)
+    # merchant.stored_revenue = invoice_items.reduce(0) {|sum, invoice_item| sum += (invoice_item.quantity * invoice_item.unit_price)}
+  end
+
+  def find_revenue_by_date(date, merchant)
+    invoices = find_invoices(date, 'created_at').find_all do |invoice|
+      sales_engine.successful_transaction?(invoice.id, 'invoice_id')
+    end
+    merchant_invoices = invoices.find_all{|invoice| invoice.merchant_id == merchant.id}
+    found_revenue = merchant_invoices.reduce(0) do |sum, invoice|
+      sum + invoice.invoice_items.reduce(0) do |sum, invoice_item|
+        sum + (invoice_item.quantity * invoice_item.unit_price)
+      end
+    end
+    found_revenue
+  end
+
+  def sort_by(x, attribute)
+    sorted = objects.sort_by{|object| object.send(attribute)}.reverse
+    sorted[0...x]
   end
 
   def most_revenue(number_of_merchants)
-    objects.each do |object|
-      find_revenue(object)
-    end
-      sorted = objects.sort_by{|object| object.stored_revenue}.reverse
-      sorted[0...number_of_merchants]
+    sort_by(number_of_merchants, "stored_revenue")
   end
 
   def most_items(number_of_merchants)
-    objects.each do |object|
-      invoices = find_successful_invoices(object.id, 'id')
-      invoice_items = find_invoice_items_by_invoices(invoices)
-      invoice_items.each {|invoice_item| object.items_sold += invoice_item.quantity}
-    end
-      sorted = objects.sort_by{|object| object.items_sold}.reverse
-      sorted[0...number_of_merchants]
+    sort_by(number_of_merchants, "items_sold")
   end
 
   def revenue(date)
-    invoices = find_invoices(date, 'created_at').find_all { |invoice|
+    invoices = find_invoices(date, 'created_at').find_all do |invoice|
       sales_engine.successful_transaction?(invoice.id, 'invoice_id')
-    }
-    found_revenue = invoices.reduce(0){|sum, invoice|
-      sum + invoice.invoice_items.reduce(0) { |sum, invoice_item| sum + (invoice_item.quantity * invoice_item.unit_price)}
-    }
+    end
+    found_revenue = invoices.reduce(0) do |sum, invoice|
+      sum + invoice.invoice_items.reduce(0) do |sum, invoice_item|
+        sum + (invoice_item.quantity * invoice_item.unit_price)
+      end
+    end
     dollars(found_revenue)
   end
 
   def find_favorite_customer(merchant)
-   favorite_customer = ['', 0]
    invoices = find_invoices(merchant.id).find_all{|invoice| sales_engine.successful_transaction?(invoice.id, 'invoice_id')}
    customers = invoices.map {|invoice| sales_engine.find_customer_by(invoice.customer_id, 'id')}.uniq
+   favorite_customer = ['', 0]
    customers.each do |customer|
-     invoices = find_invoices(customer.id, 'customer_id')
-     successes = invoices.count
+     customer_invoices = invoices.find_all { |invoice| invoice.customer_id == customer.id }
+     successes = customer_invoices.count
        if successes > favorite_customer[1]
          favorite_customer = [customer, successes]
        end

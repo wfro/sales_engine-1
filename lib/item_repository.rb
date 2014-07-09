@@ -54,15 +54,20 @@ class ItemRepository
     end
   end
 
-  def most_revenue(x)
-    sort_by(x, 'revenue_generated')
-  end
-
   def find_number_sold(item)
     invoice_items = find_successful_invoice_items(item.id)
     item.number_sold = invoice_items.reduce(0) do |sum, invoice_item|
       sum += invoice_item.quantity
     end
+  end
+
+  def sort_by(x, attribute)
+    sorted = objects.sort_by {|object| object.send(attribute)}.reverse
+    sorted[0...x]
+  end
+
+  def most_revenue(x)
+    sort_by(x, 'revenue_generated')
   end
 
   def most_items(x)
@@ -73,11 +78,6 @@ class ItemRepository
     find_invoice_items(id).find_all do |invoice_item|
       sales_engine.successful_transaction?(invoice_item.invoice_id, 'invoice_id')
     end
-  end
-
-  def sort_by(x, attribute)
-    objects.sort_by {|object| object.send(attribute)}.reverse
-    objects[0...x]
   end
 
   def find_best_day(item)

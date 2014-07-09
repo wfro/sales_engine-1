@@ -17,8 +17,8 @@ class Merchant
     @created_at          = date(data[:created_at])
     @updated_at          = date(data[:updated_at])
     @merchant_repository = repo
-    @stored_revenue      = 0
-    @items_sold          = 0
+    @stored_revenue      = merchant_repository.find_revenue(self)
+    @items_sold          = merchant_repository.find_items_sold(self)
   end
 
   def items
@@ -31,9 +31,9 @@ class Merchant
 
   def revenue(date=nil)
     if date
-      found_revenue = merchant_repository.find_revenue(self, date, 'created_at')
+      found_revenue = merchant_repository.find_revenue_by_date(date, self)
     else
-      found_revenue = merchant_repository.find_revenue(self)
+      found_revenue = stored_revenue
     end
     dollars(found_revenue)
   end
