@@ -15,7 +15,7 @@ class ItemTest < Minitest::Test
   end
 
   def test_it_has_an_id
-    assert_equal '1', item.id
+    assert_equal 1, item.id
   end
 
   def test_it_has_a_name
@@ -32,7 +32,7 @@ class ItemTest < Minitest::Test
   end
 
   def test_it_has_a_merchant_id
-    assert_equal '1', item.merchant_id
+    assert_equal 1, item.merchant_id
   end
 
   def test_it_has_a_created_at_date

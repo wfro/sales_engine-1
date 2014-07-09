@@ -1,3 +1,4 @@
+require_relative 'test_helper'
 require 'csv'
 
 class FinderTest < Minitest::Test
@@ -14,14 +15,14 @@ class FinderTest < Minitest::Test
   end
 
   def test_it_finds_by_id
-    result = objects.find_by_id('6')
+    result = objects.find_by_id(6)
     assert_equal 'Williamson Group', result.name
   end
 
   def test_it_finds_by_created_at
     date = Date.parse("2012-03-27")
     result = objects.find_by_created_at(date)
-    assert_equal '1', result.id
+    assert_equal 1, result.id
   end
 
   def test_it_finds_all_by_created_at
@@ -33,7 +34,7 @@ class FinderTest < Minitest::Test
   def test_it_finds_by_updated_at
     date = Date.parse("2012-3-27")
     result = objects.find_by_updated_at(date)
-    assert_equal '1', result.id
+    assert_equal 1, result.id
   end
 
   def test_it_finds_all_by_updated_at

@@ -12,15 +12,15 @@ class InvoiceItemTest < Minitest::Test
   end
 
   def test_it_has_an_id
-    assert_equal '1', invoice_item.id
+    assert_equal 1, invoice_item.id
   end
 
   def test_it_has_an_item_id
-    assert_equal '539', invoice_item.item_id
+    assert_equal 539, invoice_item.item_id
   end
 
   def test_it_has_an_invoice_id
-    assert_equal '1', invoice_item.invoice_id
+    assert_equal 1, invoice_item.invoice_id
   end
 
   def test_it_has_a_quantity
@@ -44,14 +44,12 @@ class InvoiceItemTest < Minitest::Test
   end
 
   def test_it_has_items
-    items = invoice_item.items
-    assert_equal 1, items.count
-    assert_kind_of Item, items[0]
+    item = invoice_item.item
+    assert_kind_of Item, item
   end
 
   def test_it_has_invoices
-    invoices = invoice_item.invoices
-    assert_equal 1, invoices.count
-    assert_kind_of Invoice, invoices[0]
+    invoice = invoice_item.invoice
+    assert_kind_of Invoice, invoice
   end
 end

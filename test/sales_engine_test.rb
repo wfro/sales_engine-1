@@ -23,36 +23,36 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_it_finds_items_by
-    items = sales_engine.find_items_by("1", "merchant_id")
+    items = sales_engine.find_items_by(1, "merchant_id")
     assert_equal 12, items.count
     assert_kind_of Item, items[1]
   end
 
   def test_it_finds_invoices_by
-    invoices = sales_engine.find_invoices_by("1", "merchant_id")
+    invoices = sales_engine.find_invoices_by(1, "merchant_id")
     assert_equal 1, invoices.count
     assert_kind_of Invoice, invoices[0]
   end
 
   def test_it_finds_transactions_by
-    transactions = sales_engine.find_transactions_by("1", "invoice_id")
+    transactions = sales_engine.find_transactions_by(1, "invoice_id")
     assert_equal 1, transactions.count
     assert_kind_of Transaction, transactions[0]
   end
 
   def test_it_finds_invoice_items_by
-    invoice_items = sales_engine.find_invoice_items_by("1", 'invoice_id')
+    invoice_items = sales_engine.find_invoice_items_by(1, 'invoice_id')
     assert_equal 8, invoice_items.count
     assert_kind_of InvoiceItem, invoice_items[0]
   end
 
   def test_it_finds_a_customer_by
-    customer = sales_engine.find_customer_by('1', 'id')
+    customer = sales_engine.find_customer_by(1, 'id')
     assert_kind_of Customer, customer
   end
 
   def test_it_finds_a_merchant_by
-    merchant = sales_engine.find_merchant_by('26', 'id')
+    merchant = sales_engine.find_merchant_by(26, 'id')
     assert_kind_of Merchant, merchant
   end
 
@@ -67,14 +67,16 @@ class SalesEngineTest < Minitest::Test
 
   def test_it_doesnt_count_failed_transactions
     business_intelligence
-    successful_transaction = @business_intelligence_engine.successful_transaction?('1', 'invoice_id')
-    unsuccessful_transaction = @business_intelligence_engine.successful_transaction?('2', 'invoice_id')
+    successful_transaction = @business_intelligence_engine.successful_transaction?(1, 'invoice_id')
+    unsuccessful_transaction = @business_intelligence_engine.successful_transaction?(2, 'invoice_id')
 
     assert successful_transaction
     refute unsuccessful_transaction
   end
 
   def test_it_creates_an_invoice
+    raise 'FIXME ZOMG! with some random data (@items), I pass and with others I fail'
+
     business_intelligence
     result = @business_intelligence_engine.create_invoice({customer: @customer, merchant: @merchant, status: "shipped", items: @items})
     assert_kind_of Invoice, result

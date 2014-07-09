@@ -15,7 +15,7 @@ class MerchantTest < Minitest::Test
   end
 
   def test_it_has_an_id
-    assert_equal "1", merchant.id
+    assert_equal 1, merchant.id
   end
 
   def test_it_has_a_name

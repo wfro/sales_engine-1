@@ -13,7 +13,7 @@ class CustomerTest < Minitest::Test
   end
 
   def test_it_has_an_id
-    assert_equal "1", customer.id
+    assert_equal 1, customer.id
   end
 
   def test_it_has_a_first_name

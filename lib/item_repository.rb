@@ -34,7 +34,7 @@ class ItemRepository
     objects.find {|object| object.unit_price == unit_price}
   end
 
-  def find_all_by_unit_price(unit_price)
+  def find_all_by_unit_price(dollars)
     unit_price = cents(dollars)
     objects.find_all {|object| object.unit_price == unit_price}
   end

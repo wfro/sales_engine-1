@@ -40,7 +40,8 @@ class SalesEngine
   end
 
   def find_merchant_by(id, attribute)
-    merchant_repository.objects.find {|merchant| merchant.send(attribute) == id}
+    merchant_repository.objects
+      .find {|merchant| merchant.send(attribute) == id}
   end
 
   def find_transactions_by(id, attribute)
@@ -56,9 +57,7 @@ class SalesEngine
   end
 
   def successful_transaction?(id, attribute)
-    binding.pry
     transaction_repository = find_transactions_by(id, attribute).any?{|transaction| transaction.result == "success"}
-    binding.pry
   end
 
   def create_invoice(data)

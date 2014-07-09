@@ -39,11 +39,23 @@ class CustomerRepository
   end
 
   def find_transactions(id)
-   invoices = sales_engine.find_invoices_by(id, "customer_id")
-   transactions = []
-   invoices.each do |invoice|
-     transactions << sales_engine.find_transactions_by(invoice.id, "invoice_id")
+    invoices = sales_engine.find_invoices_by(id, "customer_id")
+    transactions = []
+    invoices.each do |invoice|
+      transactions << sales_engine.find_transactions_by(invoice.id, "invoice_id")
+     end
+    transactions.flatten
+  end
+
+  def find_favorite_merchant(id)
+    invoices = find_successful_invoices(id)
+    hash = invoices.group_by {|invoice| invoice.merchant_id}
+    best_merchant = ['id', 0]
+    hash.each do |key, value|
+      if value.count > best_merchant[1]
+        best_merchant = [key, value]
+      end
     end
-   transactions.flatten
- end
+    sales_engine.find_merchant_by(best_merchant[0], 'id')
+  end
 end

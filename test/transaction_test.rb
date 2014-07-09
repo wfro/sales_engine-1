@@ -11,11 +11,11 @@ class TransactionTest < Minitest::Test
   end
 
   def test_it_has_an_id
-    assert_equal '1', transaction.id
+    assert_equal 1, transaction.id
   end
 
   def test_it_has_an_invoice_id
-    assert_equal '1', transaction.invoice_id
+    assert_equal 1, transaction.invoice_id
   end
 
   def test_it_has_a_credit_card_number
@@ -36,9 +36,8 @@ class TransactionTest < Minitest::Test
     assert_equal updated_at_date, transaction.updated_at
   end
 
-  def test_it_has_invoices
-    invoices = transaction.invoices
-    assert_equal 1, invoices.count
-    assert_kind_of Invoice, invoices[0]
+  def test_it_has_an_invoice
+    invoice = transaction.invoice
+    assert_kind_of Invoice, invoice
   end
 end

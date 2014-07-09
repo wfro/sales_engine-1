@@ -60,7 +60,7 @@ class MerchantRepository
 
   def most_items(number_of_merchants)
     objects.each do |object|
-      invoices = find_successful_invoices(object.id)
+      invoices = find_successful_invoices(object.id, 'id')
       invoice_items = find_invoice_items_by_invoices(invoices)
       invoice_items.each {|invoice_item| object.items_sold += invoice_item.quantity}
     end

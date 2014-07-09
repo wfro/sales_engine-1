@@ -19,7 +19,7 @@ class LoaderTest < Minitest::Test
     assert_equal 'Schroeder-Jerde', results.name
 
     results = loader[1]
-    assert_equal '2', results.id
+    assert_equal 2, results.id
 
     results = loader[2]
     created_at_date = Date.parse("2012-03-27")

@@ -13,56 +13,56 @@ class InvoiceRepositoryTest < Minitest::Test
   end
 
   def test_it_finds_transactions
-    transactions = invoice_repo.find_transactions('1')
+    transactions = invoice_repo.find_transactions(1)
     assert_equal 1, transactions.count
     assert_kind_of Transaction, transactions[0]
   end
 
   def test_it_finds_invoice_items
-    invoice_items = invoice_repo.find_invoice_items('1')
+    invoice_items = invoice_repo.find_invoice_items(1)
     assert_equal 8, invoice_items.count
     assert_kind_of InvoiceItem, invoice_items[0]
   end
 
   def test_it_finds_items
-    items = invoice_repo.find_items('1')
+    items = invoice_repo.find_items(1)
     assert_equal 2, items.count
     assert_kind_of Item, items[0]
   end
 
   def test_it_finds_a_customer
-    customer = invoice_repo.find_customer('1')
+    customer = invoice_repo.find_customer(1)
     assert_kind_of Customer, customer
   end
 
   def test_it_finds_a_merchant
-    merchant = invoice_repo.find_merchant('26')
+    merchant = invoice_repo.find_merchant(26)
     assert_kind_of Merchant, merchant
   end
 
   def test_it_finds_by_customer_id
-    result = invoice_repo.find_by_customer_id('1')
-    assert_equal '1', result.id
+    result = invoice_repo.find_by_customer_id(1)
+    assert_equal 1, result.id
   end
 
   def test_it_finds_all_by_customer_id
-    result = invoice_repo.find_all_by_customer_id('1')
+    result = invoice_repo.find_all_by_customer_id(1)
     assert_equal 16, result.count
   end
 
   def test_it_finds_by_merchant_id
-    result = invoice_repo.find_by_merchant_id('27')
-    assert_equal '9', result.id
+    result = invoice_repo.find_by_merchant_id(27)
+    assert_equal 9, result.id
   end
 
   def test_it_finds_all_by_merchant_id
-    result = invoice_repo.find_all_by_merchant_id('27')
+    result = invoice_repo.find_all_by_merchant_id(27)
     assert_equal 1, result.count
   end
 
   def test_it_finds_by_status
     result = invoice_repo.find_by_status('shipped')
-    assert_equal '1', result.id
+    assert_equal 1, result.id
   end
 
   def test_it_finds_all_by_status

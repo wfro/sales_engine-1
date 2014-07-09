@@ -16,20 +16,20 @@ class MerchantRepositoryTest < Minitest::Test
   end
 
   def test_it_finds_items
-    items = merchant_repo.find_items("1")
+    items = merchant_repo.find_items(1)
     assert_equal 12, items.count
     assert_kind_of Item, items[1]
   end
 
   def test_it_finds_invoices
-    invoices = merchant_repo.find_invoices("1")
+    invoices = merchant_repo.find_invoices(1)
     assert_equal 1, invoices.count
     assert_kind_of Invoice, invoices[0]
   end
 
   def test_it_finds_by_name
     result = merchant_repo.find_by_name('Bernhard-Johns')
-    assert_equal '7', result.id
+    assert_equal 7, result.id
   end
 
   def test_it_finds_all_by_name
