@@ -8,7 +8,7 @@ class MerchantRepository
 
   attr_reader   :sales_engine
   attr_accessor :objects
-  
+
   def initialize(filename, engine)
     @sales_engine = engine
     @objects      = Loader.read(filename, Merchant, self).to_a
@@ -46,24 +46,32 @@ class MerchantRepository
     end
   end
 
-  def find_items_sold(merchant)
-    invoices = find_successful_invoices(merchant.id, 'id')
-    merchant.items_sold = invoices.reduce(0) do |sum, invoice|
+  def calculated_items_by_invoices(invoices)
+    invoices.reduce(0) do |sum, invoice|
       sum + invoice.invoice_items.reduce(0) do |sum, invoice_item|
         sum + invoice_item.quantity
       end
     end
   end
 
-  def find_revenue(merchant, search_by=merchant.id, attribute='merchant_id')
-    invoices = find_invoices(search_by, attribute).find_all do |invoice|
-      sales_engine.successful_transaction?(invoice.id, 'invoice_id')
-    end
-    merchant.stored_revenue = invoices.reduce(0) do |sum, invoice|
+  def calculated_revenue_by_invoices(invoices)
+    invoices.reduce(0) do |sum, invoice|
       sum + invoice.invoice_items.reduce(0) do |sum, invoice_item|
         sum + (invoice_item.quantity * invoice_item.unit_price)
       end
     end
+  end
+
+  def find_items_sold(merchant)
+    invoices = find_successful_invoices(merchant.id, 'id')
+    merchant.items_sold = calculated_items_by_invoices(invoices)
+  end
+
+  def find_revenue(merchant, search_by=merchant.id, attribute='merchant_id')
+    invoices = find_invoices(search_by, attribute).find_all do |invoice|
+      sales_engine.successful_transaction?(invoice.id, 'invoice_id')
+    end
+    merchant.stored_revenue = calculated_revenue_by_invoices(invoices)
   end
 
   def find_revenue_by_date(date, merchant)
@@ -73,12 +81,7 @@ class MerchantRepository
     merchant_invoices = invoices.find_all do |invoice|
       invoice.merchant_id == merchant.id
     end
-    found_revenue = merchant_invoices.reduce(0) do |sum, invoice|
-      sum + invoice.invoice_items.reduce(0) do |sum, invoice_item|
-        sum + (invoice_item.quantity * invoice_item.unit_price)
-      end
-    end
-    found_revenue
+    found_revenue = calculated_revenue_by_invoices(merchant_invoices)
   end
 
   def sort_by(x, attribute)
