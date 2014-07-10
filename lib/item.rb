@@ -23,7 +23,6 @@ class Item
     @created_at         = date(data[:created_at])
     @updated_at         = date(data[:updated_at])
     @item_repository    = repo
-    #these lines are causing issues
     @revenue_generated  = item_repository.find_revenue_generated(self)
     @number_sold        = item_repository.find_number_sold(self)
   end

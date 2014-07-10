@@ -1,6 +1,5 @@
 require './test/test_helper'
 require 'bigdecimal'
-require 'pry'
 
 class ItemRepositoryTest < Minitest::Test
   attr_reader :item_repo

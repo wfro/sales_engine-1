@@ -30,12 +30,9 @@ class Merchant
   end
 
   def revenue(date=nil)
-    if date
+    return dollars(stored_revenue) if date.nil?
       found_revenue = merchant_repository.find_revenue_by_date(date, self)
-    else
-      found_revenue = stored_revenue
-    end
-    dollars(found_revenue)
+      dollars(found_revenue)
   end
 
   def favorite_customer

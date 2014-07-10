@@ -1,5 +1,4 @@
 require './test/test_helper'
-require 'pry'
 
 class CustomerRepositoryTest < Minitest::Test
   attr_reader :customer_repo

@@ -9,7 +9,7 @@ class TransactionRepository
   attr_accessor :objects
   def initialize(filename, engine)
     @sales_engine = engine
-    @objects = Loader.read(filename, Transaction, self).to_a
+    @objects      = Loader.read(filename, Transaction, self).to_a
   end
 
   def find_invoices(invoice_id)

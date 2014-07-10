@@ -1,3 +1,4 @@
+#refactor
 require_relative './finder'
 require_relative './loader'
 require_relative './merchant'
@@ -10,7 +11,7 @@ class MerchantRepository
   attr_accessor :objects
   def initialize(filename, engine)
     @sales_engine = engine
-    @objects = Loader.read(filename, Merchant, self).to_a
+    @objects      = Loader.read(filename, Merchant, self).to_a
   end
 
   def find_by_name(name)
@@ -44,13 +45,13 @@ class MerchantRepository
   end
 
   def find_items_sold(merchant)
+    #refactor
     invoices = find_successful_invoices(merchant.id, 'id')
     merchant.items_sold = invoices.reduce(0) do |sum, invoice|
       sum + invoice.invoice_items.reduce(0) do |sum, invoice_item|
         sum + invoice_item.quantity
       end
     end
-
     # invoice_items = find_invoice_items_by_invoices(invoices)
     # merchant.items_sold = invoice_items.reduce(0) do |sum, invoice_item|
     #   sum += invoice_item.quantity
@@ -58,6 +59,7 @@ class MerchantRepository
   end
 
   def find_revenue(merchant, search_by=merchant.id, attribute='merchant_id')
+    #refactor
     invoices = find_invoices(search_by, attribute).find_all{|invoice| sales_engine.successful_transaction?(invoice.id, 'invoice_id')}
     merchant.stored_revenue = invoices.reduce(0) do |sum, invoice|
       sum + invoice.invoice_items.reduce(0) do |sum, invoice_item|
@@ -69,6 +71,7 @@ class MerchantRepository
   end
 
   def find_revenue_by_date(date, merchant)
+    ###refactor
     invoices = find_invoices(date, 'created_at').find_all do |invoice|
       sales_engine.successful_transaction?(invoice.id, 'invoice_id')
     end
@@ -95,6 +98,7 @@ class MerchantRepository
   end
 
   def revenue(date)
+    #refactor
     invoices = find_invoices(date, 'created_at').find_all do |invoice|
       sales_engine.successful_transaction?(invoice.id, 'invoice_id')
     end
@@ -107,6 +111,7 @@ class MerchantRepository
   end
 
   def find_favorite_customer(merchant)
+    #refactor
    invoices = find_invoices(merchant.id).find_all{|invoice| sales_engine.successful_transaction?(invoice.id, 'invoice_id')}
    customers = invoices.map {|invoice| sales_engine.find_customer_by(invoice.customer_id, 'id')}.uniq
    favorite_customer = ['', 0]
@@ -121,6 +126,7 @@ class MerchantRepository
    end
 
   def find_customers_with_pending_invoices(merchant)
+    #refactor
     invoices = find_invoices(merchant.id)
     customers = invoices.map { |invoice| sales_engine.find_customer_by(invoice.customer_id, 'id')}
     pending_customers = []

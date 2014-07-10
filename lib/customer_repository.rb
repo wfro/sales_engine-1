@@ -1,3 +1,4 @@
+##refactor
 require_relative './finder'
 require_relative './loader'
 require_relative './customer'
@@ -33,9 +34,7 @@ class CustomerRepository
   end
 
   def find_successful_invoices(id)
-    find_invoices(id).find_all do |invoice|
-      sales_engine.successful_transaction?(invoice.id, 'invoice_id')
-    end
+    find_invoices(id).find_all { |invoice| sales_engine.successful_transaction?(invoice.id, 'invoice_id')}
   end
 
   def find_transactions(id)
@@ -44,6 +43,7 @@ class CustomerRepository
   end
 
   def find_favorite_merchant(id)
+    #refactor? can't figure it out
     invoices = find_successful_invoices(id)
     hash = invoices.group_by {|invoice| invoice.merchant_id}
     best_merchant = ['id', 0]

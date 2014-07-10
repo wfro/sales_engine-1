@@ -9,7 +9,7 @@ class InvoiceRepository
   attr_accessor :objects
   def initialize(filename, engine)
     @sales_engine = engine
-    @objects = Loader.read(filename, Invoice, self).to_a
+    @objects      = Loader.read(filename, Invoice, self).to_a
   end
 
   def find_transactions(id)
@@ -23,12 +23,10 @@ class InvoiceRepository
   def find_items(id)
     invoice_items = find_invoice_items(id)
     item_ids = invoice_items.collect {|inv_item| inv_item.item_id}
-    items = []
-    item_ids.each do |item_id|
+    items = item_ids.map do |item_id|
       item = sales_engine.find_items_by(item_id, 'id').first
-      items << item unless item == nil
     end
-    items
+    items.reject{|item| item.nil?}
   end
 
   def find_customer(customer_id)
@@ -66,7 +64,7 @@ class InvoiceRepository
   def create(data)
     invoice = sales_engine.create_invoice(data)
     sales_engine.create_invoice_item(data)
-    invoice
+    return invoice
   end
 
   def charge(data, id)

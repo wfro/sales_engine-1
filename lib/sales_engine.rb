@@ -1,4 +1,3 @@
-# require_relative './lib_helper'
 require_relative './transaction_repository'
 require_relative './customer_repository'
 require_relative './invoice_item_repository'
@@ -8,9 +7,6 @@ require_relative './merchant_repository'
 
 require 'csv'
 require 'bigdecimal'
-require 'pry'
-
-
 
 class SalesEngine
   attr_reader :merchant_repository,
@@ -89,7 +85,13 @@ class SalesEngine
   end
 
   def create_transaction(data, id)
-    transaction = Transaction.new({id: (transaction_repository.objects.count +1), invoice_id: id, credit_card_number: data[:credit_card_number], result: data[:result], created_at: Time.new.to_s, updated_at: Time.new.to_s}, transaction_repository)
+    transaction = Transaction.new({id: (transaction_repository.objects.count +1),
+                                   invoice_id: id,
+                                   credit_card_number: data[:credit_card_number],
+                                   result: data[:result],
+                                   created_at: Time.new.to_s,
+                                   updated_at: Time.new.to_s},
+                                   transaction_repository)
     transaction_repository.objects << transaction
   end
 end

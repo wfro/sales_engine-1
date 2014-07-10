@@ -1,6 +1,5 @@
 require './test/test_helper'
 require 'bigdecimal'
-require 'pry'
 
 class ItemTest < Minitest::Test
   attr_reader :item

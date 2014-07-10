@@ -1,3 +1,4 @@
+#refactor
 require_relative './finder'
 require_relative './loader'
 require_relative './item'
@@ -17,6 +18,12 @@ class ItemRepository
     sales_engine.find_invoice_items_by(id, "item_id")
   end
 
+  def find_invoices(id)
+    invoice_items = find_invoice_items(id)
+    invoice_ids    = invoice_items.map {|invoice_item| invoice_item.invoice_id}
+    invoice_ids.map {|invoice_id| sales_engine.find_invoices_by(invoice_id, "id")}.flatten
+  end
+
   def find_merchant(merchant_id)
     sales_engine.find_merchant_by(merchant_id, "id")
   end
@@ -30,12 +37,12 @@ class ItemRepository
   end
 
   def find_by_unit_price(dollars)
-    unit_price = cents(dollars)
+    unit_price = cents(dollars) #pull out
     objects.find {|object| object.unit_price == unit_price}
   end
 
   def find_all_by_unit_price(dollars)
-    unit_price = cents(dollars)
+    unit_price = cents(dollars) #pull out
     objects.find_all {|object| object.unit_price == unit_price}
   end
 
@@ -48,14 +55,14 @@ class ItemRepository
   end
 
   def find_revenue_generated(item)
-    invoice_items = find_successful_invoice_items(item.id)
+    invoice_items          = find_successful_invoice_items(item.id) #pull out
     item.revenue_generated = invoice_items.reduce(0) do |sum, invoice_item|
       sum += invoice_item.quantity * invoice_item.unit_price
     end
   end
 
   def find_number_sold(item)
-    invoice_items = find_successful_invoice_items(item.id)
+    invoice_items    = find_successful_invoice_items(item.id) #pull out
     item.number_sold = invoice_items.reduce(0) do |sum, invoice_item|
       sum += invoice_item.quantity
     end
@@ -81,13 +88,8 @@ class ItemRepository
   end
 
   def find_best_day(item)
-    invoice_items = find_invoice_items(item.id)
-    invoice_items_with_revenue = invoice_items.each_with_index do |invoice_item|
-      id = invoice_item.invoice_id
-      id = (invoice_item.quantity * invoice_item.unit_price)
-    end
-    sorted_invoice_items_with_revenue = invoice_items_with_revenue.sort_by{|invoice_item| invoice_item.unit_price * invoice_item.quantity}.reverse
-    highest_revenue = sorted_invoice_items_with_revenue.first
+    invoice_items   = find_invoice_items(item.id)
+    highest_revenue = invoice_items.max_by {|invoice_item| invoice_item.quantity * invoice_item.unit_price}
     invoice = sales_engine.find_invoices_by(highest_revenue.invoice_id, "id")
     invoice[0].created_at
   end
