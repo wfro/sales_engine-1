@@ -97,7 +97,6 @@ class SalesEngine
                                       invoice_item_repository)
       invoice_item_repository.objects << invoice_item
     end
-
   end
 
   def create_transaction(data, id)
