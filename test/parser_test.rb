@@ -5,7 +5,7 @@ class ParserTest < Minitest::Test
   attr_reader :invoice_item
 
   def setup
-    engine = SalesEngine.new('./test/fixtures')
+    engine = SalesEngine.new
     engine.startup("./test/fixtures")
     @invoice_item = engine.invoice_item_repository.objects[0]
   end

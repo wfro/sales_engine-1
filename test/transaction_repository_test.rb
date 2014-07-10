@@ -4,7 +4,7 @@ class TransactionRepositoryTest < Minitest::Test
   attr_reader :transaction_repo
 
   def setup
-    engine = SalesEngine.new('./test/fixtures')
+    engine = SalesEngine.new
     engine.startup("./test/fixtures")
     @transaction_repo = engine.transaction_repository
   end

@@ -16,9 +16,6 @@ class SalesEngine
               :item_repository,
               :transaction_repository
 
-  def initialize(path)
-  end
-
   def startup(path='data')
     @invoice_repository      =
                     InvoiceRepository.new("#{path}/invoices.csv", self)

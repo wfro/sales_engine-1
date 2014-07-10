@@ -5,7 +5,7 @@ class MerchantTest < Minitest::Test
   attr_reader :merchant
 
   def setup
-    engine = SalesEngine.new('./test/fixtures')
+    engine = SalesEngine.new
     engine.startup('./test/fixtures')
     @merchant = engine.merchant_repository.objects[0]
   end
@@ -45,7 +45,7 @@ class MerchantTest < Minitest::Test
   end
 
   def business_intelligence
-    engine = SalesEngine.new('.test/fixtures/business_intelligence')
+    engine = SalesEngine.new
     engine.startup('./test/fixtures/business_intelligence')
     @business_intelligence_merchant = Merchant.new({id: "2", name: "Klein, Rempel and Jones", created_at: "2012-03-27 14:53:59 UTC", updated_at: "2012-03-27 14:53:59 UTC"}, engine.merchant_repository)
   end

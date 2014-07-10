@@ -4,7 +4,7 @@ require 'bigdecimal'
 class ItemRepositoryTest < Minitest::Test
   attr_reader :item_repo
   def setup
-    engine = SalesEngine.new('./test/fixtures')
+    engine = SalesEngine.new
     engine.startup("./test/fixtures")
     @item_repo = engine.item_repository
   end
@@ -55,7 +55,7 @@ class ItemRepositoryTest < Minitest::Test
   end
 
   def business_intelligence
-    engine = SalesEngine.new("./test/fixtures/business_intelligence")
+    engine = SalesEngine.new
     engine.startup("./test/fixtures/business_intelligence")
     @business_intelligence_repo = engine.item_repository
   end

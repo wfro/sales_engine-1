@@ -3,7 +3,7 @@ require './test/test_helper'
 class CustomerRepositoryTest < Minitest::Test
   attr_reader :customer_repo
   def setup
-    engine = SalesEngine.new("./test/fixtures")
+    engine = SalesEngine.new
     engine.startup("./test/fixtures")
     @customer_repo = engine.customer_repository
   end
@@ -39,7 +39,7 @@ class CustomerRepositoryTest < Minitest::Test
   end
 
   def business_intelligence
-    engine = SalesEngine.new("./test/fixtures/business_intelligence")
+    engine = SalesEngine.new
     engine.startup("./test/fixtures/business_intelligence")
     @business_intelligence_repo = engine.customer_repository
   end
