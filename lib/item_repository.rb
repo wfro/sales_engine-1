@@ -1,4 +1,3 @@
-#refactor
 require_relative './finder'
 require_relative './loader'
 require_relative './item'
@@ -37,12 +36,12 @@ class ItemRepository
   end
 
   def find_by_unit_price(dollars)
-    unit_price = cents(dollars) #pull out
+    unit_price = cents(dollars)
     objects.find {|object| object.unit_price == unit_price}
   end
 
   def find_all_by_unit_price(dollars)
-    unit_price = cents(dollars) #pull out
+    unit_price = cents(dollars)
     objects.find_all {|object| object.unit_price == unit_price}
   end
 
@@ -55,14 +54,14 @@ class ItemRepository
   end
 
   def find_revenue_generated(item)
-    invoice_items          = find_successful_invoice_items(item.id) #pull out
+    invoice_items          = find_successful_invoice_items(item.id)
     item.revenue_generated = invoice_items.reduce(0) do |sum, invoice_item|
       sum += invoice_item.quantity * invoice_item.unit_price
     end
   end
 
   def find_number_sold(item)
-    invoice_items    = find_successful_invoice_items(item.id) #pull out
+    invoice_items    = find_successful_invoice_items(item.id) 
     item.number_sold = invoice_items.reduce(0) do |sum, invoice_item|
       sum += invoice_item.quantity
     end
