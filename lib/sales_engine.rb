@@ -15,7 +15,7 @@ class SalesEngine
               :invoice_repository,
               :item_repository,
               :transaction_repository
-              
+
   def initialize(path)
   end
 
@@ -88,11 +88,13 @@ class SalesEngine
     item_hash.each do |key, value|
       id           = invoice_item_repository.objects.count + 1
       invoice_id   = invoice_repository.objects.count
+      quantity     = value.count
+      unit_price   = value[0].unit_price
       invoice_item = InvoiceItem.new({id: id,
                                       item_id: key,
                                       invoice_id: invoice_id,
-                                      quantity: value.count,
-                                      unit_price: value[0].unit_price,
+                                      quantity: quantity,
+                                      unit_price: unit_price,
                                       created_at: Time.new.to_s,
                                       updated_at: Time.new.to_s},
                                       invoice_item_repository)

@@ -68,9 +68,7 @@ class MerchantRepository
   end
 
   def find_revenue(merchant, search_by=merchant.id, attribute='merchant_id')
-    invoices = find_invoices(search_by, attribute).find_all do |invoice|
-      sales_engine.successful_transaction?(invoice.id, 'invoice_id')
-    end
+    invoices = find_successful_invoices(merchant.id, 'id')
     merchant.stored_revenue = calculated_revenue_by_invoices(invoices)
   end
 
@@ -106,12 +104,12 @@ class MerchantRepository
   end
 
   def find_favorite_customer(merchant)
-   invoices = find_invoices(merchant.id).find_all do |invoice|
-     sales_engine.successful_transaction?(invoice.id, 'invoice_id')
-   end
+   invoices = find_successful_invoices(merchant.id, 'id')
+
    customers = invoices.map do |invoice|
      sales_engine.find_customer_by(invoice.customer_id, 'id')
    end.uniq
+
    favorite_customer = ['', 0]
    customers.each do |customer|
      customer_invoices = invoices.find_all do
@@ -122,6 +120,7 @@ class MerchantRepository
          favorite_customer = [customer, successes]
        end
      end
+
      favorite_customer[0]
    end
 

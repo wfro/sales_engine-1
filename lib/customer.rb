@@ -9,7 +9,7 @@ class Customer
               :created_at,
               :updated_at,
               :customer_repository
-              
+
   def initialize(data, repo)
     @id                  = data[:id].to_i
     @first_name          = data[:first_name]
