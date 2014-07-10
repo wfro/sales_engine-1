@@ -9,7 +9,7 @@ class CustomerRepository
   attr_accessor :objects
   def initialize(filename, engine)
     @sales_engine = engine
-    @objects = Loader.read(filename, Customer, self)
+    @objects      = Loader.read(filename, Customer, self)
   end
 
   def find_invoices(id)
@@ -40,11 +40,7 @@ class CustomerRepository
 
   def find_transactions(id)
     invoices = sales_engine.find_invoices_by(id, "customer_id")
-    transactions = []
-    invoices.each do |invoice|
-      transactions << sales_engine.find_transactions_by(invoice.id, "invoice_id")
-     end
-    transactions.flatten
+    transactions = invoices.map { |invoice| sales_engine.find_transactions_by(invoice.id, "invoice_id") }.flatten
   end
 
   def find_favorite_merchant(id)
