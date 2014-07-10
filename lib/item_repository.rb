@@ -8,6 +8,7 @@ class ItemRepository
 
   attr_reader   :sales_engine
   attr_accessor :objects
+  
   def initialize(filename, engine)
     @sales_engine  = engine
     @objects = Loader.read(filename, Item, self).to_a
@@ -20,7 +21,9 @@ class ItemRepository
   def find_invoices(id)
     invoice_items = find_invoice_items(id)
     invoice_ids    = invoice_items.map {|invoice_item| invoice_item.invoice_id}
-    invoice_ids.map {|invoice_id| sales_engine.find_invoices_by(invoice_id, "id")}.flatten
+    invoice_ids.map do |invoice_id|
+      sales_engine.find_invoices_by(invoice_id, "id")
+    end.flatten
   end
 
   def find_merchant(merchant_id)
@@ -61,7 +64,7 @@ class ItemRepository
   end
 
   def find_number_sold(item)
-    invoice_items    = find_successful_invoice_items(item.id) 
+    invoice_items    = find_successful_invoice_items(item.id)
     item.number_sold = invoice_items.reduce(0) do |sum, invoice_item|
       sum += invoice_item.quantity
     end
@@ -82,13 +85,15 @@ class ItemRepository
 
   def find_successful_invoice_items(id)
     find_invoice_items(id).find_all do |invoice_item|
-      sales_engine.successful_transaction?(invoice_item.invoice_id, 'invoice_id')
+      sales_engine.successful_transaction?(invoice_item.invoice_id,'invoice_id')
     end
   end
 
   def find_best_day(item)
     invoice_items   = find_invoice_items(item.id)
-    highest_revenue = invoice_items.max_by {|invoice_item| invoice_item.quantity * invoice_item.unit_price}
+    highest_revenue = invoice_items.max_by do |invoice_item|
+      invoice_item.quantity * invoice_item.unit_price
+      end
     invoice = sales_engine.find_invoices_by(highest_revenue.invoice_id, "id")
     invoice[0].created_at
   end

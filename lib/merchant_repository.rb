@@ -8,6 +8,7 @@ class MerchantRepository
 
   attr_reader   :sales_engine
   attr_accessor :objects
+  
   def initialize(filename, engine)
     @sales_engine = engine
     @objects      = Loader.read(filename, Merchant, self).to_a
@@ -30,7 +31,9 @@ class MerchantRepository
   end
 
   def find_invoice_items_by_invoices(invoices)
-    invoices.map{|invoice| sales_engine.find_invoice_items_by(invoice.id, "invoice_id").first}
+    invoices.map do |invoice|
+      sales_engine.find_invoice_items_by(invoice.id, "invoice_id").first
+    end
   end
 
   def find_invoice_items(date)
@@ -53,7 +56,9 @@ class MerchantRepository
   end
 
   def find_revenue(merchant, search_by=merchant.id, attribute='merchant_id')
-    invoices = find_invoices(search_by, attribute).find_all{|invoice| sales_engine.successful_transaction?(invoice.id, 'invoice_id')}
+    invoices = find_invoices(search_by, attribute).find_all do |invoice|
+      sales_engine.successful_transaction?(invoice.id, 'invoice_id')
+    end
     merchant.stored_revenue = invoices.reduce(0) do |sum, invoice|
       sum + invoice.invoice_items.reduce(0) do |sum, invoice_item|
         sum + (invoice_item.quantity * invoice_item.unit_price)
@@ -65,7 +70,9 @@ class MerchantRepository
     invoices = find_invoices(date, 'created_at').find_all do |invoice|
       sales_engine.successful_transaction?(invoice.id, 'invoice_id')
     end
-    merchant_invoices = invoices.find_all{|invoice| invoice.merchant_id == merchant.id}
+    merchant_invoices = invoices.find_all do |invoice|
+      invoice.merchant_id == merchant.id
+    end
     found_revenue = merchant_invoices.reduce(0) do |sum, invoice|
       sum + invoice.invoice_items.reduce(0) do |sum, invoice_item|
         sum + (invoice_item.quantity * invoice_item.unit_price)
@@ -100,11 +107,17 @@ class MerchantRepository
   end
 
   def find_favorite_customer(merchant)
-   invoices = find_invoices(merchant.id).find_all{|invoice| sales_engine.successful_transaction?(invoice.id, 'invoice_id')}
-   customers = invoices.map {|invoice| sales_engine.find_customer_by(invoice.customer_id, 'id')}.uniq
+   invoices = find_invoices(merchant.id).find_all do |invoice|
+     sales_engine.successful_transaction?(invoice.id, 'invoice_id')
+   end
+   customers = invoices.map do |invoice|
+     sales_engine.find_customer_by(invoice.customer_id, 'id')
+   end.uniq
    favorite_customer = ['', 0]
    customers.each do |customer|
-     customer_invoices = invoices.find_all { |invoice| invoice.customer_id == customer.id }
+     customer_invoices = invoices.find_all do
+        |invoice| invoice.customer_id == customer.id
+      end
      successes = customer_invoices.count
        if successes > favorite_customer[1]
          favorite_customer = [customer, successes]
@@ -115,13 +128,20 @@ class MerchantRepository
 
   def find_customers_with_pending_invoices(merchant)
     invoices = find_invoices(merchant.id)
-    customers = invoices.map { |invoice| sales_engine.find_customer_by(invoice.customer_id, 'id')}
+    customers = invoices.map do |invoice|
+      sales_engine.find_customer_by(invoice.customer_id, 'id')
+      end
     pending_customers = []
     customers.each do |customer|
-      customer_invoices = invoices.find_all { |invoice| invoice.customer_id == customer.id }
+      customer_invoices = invoices.find_all do |invoice|
+        invoice.customer_id == customer.id
+      end
       customer_invoices.each do |invoice|
-        transactions = sales_engine.find_transactions_by(invoice.id, 'invoice_id')
-        if transactions.empty? || transactions.none? {|transaction| transaction.result == "success"}
+        transactions = sales_engine.
+        find_transactions_by(invoice.id, 'invoice_id')
+        if transactions.empty? || transactions.none? do |transaction|
+          transaction.result == "success"
+        end
            pending_customers << customer
         end
       end

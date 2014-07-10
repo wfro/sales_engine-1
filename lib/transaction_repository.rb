@@ -7,6 +7,7 @@ class TransactionRepository
 
   attr_reader   :sales_engine
   attr_accessor :objects
+  
   def initialize(filename, engine)
     @sales_engine = engine
     @objects      = Loader.read(filename, Transaction, self).to_a

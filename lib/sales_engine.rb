@@ -15,16 +15,23 @@ class SalesEngine
               :invoice_repository,
               :item_repository,
               :transaction_repository
+              
   def initialize(path)
   end
 
   def startup(path='data')
-    @invoice_repository      = InvoiceRepository.new("#{path}/invoices.csv", self)
-    @invoice_item_repository = InvoiceItemRepository.new("#{path}/invoice_items.csv", self)
-    @transaction_repository  = TransactionRepository.new("#{path}/transactions.csv", self)
-    @merchant_repository     = MerchantRepository.new("#{path}/merchants.csv", self)
-    @customer_repository     = CustomerRepository.new("#{path}/customers.csv",self)
-    @item_repository         = ItemRepository.new("#{path}/items.csv", self)
+    @invoice_repository      =
+                    InvoiceRepository.new("#{path}/invoices.csv", self)
+    @invoice_item_repository =
+                    InvoiceItemRepository.new("#{path}/invoice_items.csv", self)
+    @transaction_repository  =
+                    TransactionRepository.new("#{path}/transactions.csv", self)
+    @merchant_repository     =
+                    MerchantRepository.new("#{path}/merchants.csv", self)
+    @customer_repository     =
+                    CustomerRepository.new("#{path}/customers.csv",self)
+    @item_repository         =
+                    ItemRepository.new("#{path}/items.csv", self)
   end
 
   def find_items_by(id, attribute)
@@ -32,7 +39,9 @@ class SalesEngine
   end
 
   def find_invoices_by(id, attribute)
-    invoice_repository.objects.find_all {|invoice| invoice.send(attribute) == id}
+    invoice_repository.objects.find_all do |invoice|
+      invoice.send(attribute) == id
+    end
   end
 
   def find_merchant_by(id, attribute)
@@ -41,11 +50,15 @@ class SalesEngine
   end
 
   def find_transactions_by(id, attribute)
-    transaction_repository.objects.find_all{|transaction| transaction.send(attribute) == id}
+    transaction_repository.objects.find_all do |transaction|
+      transaction.send(attribute) == id
+    end
   end
 
   def find_invoice_items_by(id, attribute)
-    invoice_item_repository.objects.find_all{|invoice_item| invoice_item.send(attribute) == id}
+    invoice_item_repository.objects.find_all do |invoice_item|
+      invoice_item.send(attribute) == id
+    end
   end
 
   def find_customer_by(id, attribute)
@@ -53,7 +66,9 @@ class SalesEngine
   end
 
   def successful_transaction?(id, attribute)
-    find_transactions_by(id, attribute).any?{|transaction| transaction.result == "success"}
+    find_transactions_by(id, attribute).any? do |transaction|
+      transaction.result == "success"
+    end
   end
 
   def create_invoice(data)
@@ -71,9 +86,11 @@ class SalesEngine
   def create_invoice_item(data)
     item_hash = data[:items].group_by{|item| item.id}
     item_hash.each do |key, value|
-      invoice_item = InvoiceItem.new({id: (invoice_item_repository.objects.count + 1),
+      id           = invoice_item_repository.objects.count + 1
+      invoice_id   = invoice_repository.objects.count
+      invoice_item = InvoiceItem.new({id: id,
                                       item_id: key,
-                                      invoice_id: invoice_repository.objects.count,
+                                      invoice_id: invoice_id,
                                       quantity: value.count,
                                       unit_price: value[0].unit_price,
                                       created_at: Time.new.to_s,
@@ -85,9 +102,11 @@ class SalesEngine
   end
 
   def create_transaction(data, id)
-    transaction = Transaction.new({id: (transaction_repository.objects.count +1),
+    transaction_id = (transaction_repository.objects.count +1)
+    credit_card    =  data[:credit_card_number]
+    transaction    = Transaction.new({id: transaction_id,
                                    invoice_id: id,
-                                   credit_card_number: data[:credit_card_number],
+                                   credit_card_number: credit_card,
                                    result: data[:result],
                                    created_at: Time.new.to_s,
                                    updated_at: Time.new.to_s},
