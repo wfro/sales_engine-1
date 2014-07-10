@@ -101,11 +101,7 @@ class MerchantRepository
     invoices = find_invoices(date, 'created_at').find_all do |invoice|
       sales_engine.successful_transaction?(invoice.id, 'invoice_id')
     end
-    found_revenue = invoices.reduce(0) do |sum, invoice|
-      sum + invoice.invoice_items.reduce(0) do |sum, invoice_item|
-        sum + (invoice_item.quantity * invoice_item.unit_price)
-      end
-    end
+    found_revenue = calculated_revenue_by_invoices(invoices)
     dollars(found_revenue)
   end
 
