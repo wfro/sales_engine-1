@@ -19,8 +19,9 @@ class ItemRepository
   end
 
   def find_invoices(id)
-    invoice_items = find_invoice_items(id)
+    invoice_items  = find_invoice_items(id)
     invoice_ids    = invoice_items.map {|invoice_item| invoice_item.invoice_id}
+
     invoice_ids.map do |invoice_id|
       sales_engine.find_invoices_by(invoice_id, "id")
     end.flatten
@@ -93,7 +94,8 @@ class ItemRepository
     invoice_items   = find_invoice_items(item.id)
     highest_revenue = invoice_items.max_by do |invoice_item|
       invoice_item.quantity * invoice_item.unit_price
-      end
+    end
+
     invoice = sales_engine.find_invoices_by(highest_revenue.invoice_id, "id")
     invoice[0].created_at
   end

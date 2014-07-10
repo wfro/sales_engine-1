@@ -23,7 +23,8 @@ class InvoiceRepository
 
   def find_items(id)
     invoice_items = find_invoice_items(id)
-    item_ids = invoice_items.collect {|inv_item| inv_item.item_id}
+    item_ids      = invoice_items.collect {|inv_item| inv_item.item_id}
+
     items = item_ids.map do |item_id|
       item = sales_engine.find_items_by(item_id, 'id').first
     end
@@ -65,7 +66,7 @@ class InvoiceRepository
   def create(data)
     invoice = sales_engine.create_invoice(data)
     sales_engine.create_invoice_item(data)
-    return invoice
+    invoice
   end
 
   def charge(data, id)

@@ -128,7 +128,8 @@ class MerchantRepository
     invoices = find_invoices(merchant.id)
     customers = invoices.map do |invoice|
       sales_engine.find_customer_by(invoice.customer_id, 'id')
-      end
+    end
+
     pending_customers = []
     customers.each do |customer|
       customer_invoices = invoices.find_all do |invoice|
@@ -144,6 +145,7 @@ class MerchantRepository
         end
       end
     end
+    
    pending_customers
   end
 end

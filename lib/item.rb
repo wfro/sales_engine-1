@@ -3,16 +3,17 @@ require_relative './parser'
 class Item
   include Parser
 
-  attr_reader :id,
-              :name,
-              :description,
-              :unit_price,
-              :merchant_id,
-              :created_at,
-              :updated_at,
-              :item_repository
+  attr_reader   :id,
+                :name,
+                :description,
+                :unit_price,
+                :merchant_id,
+                :created_at,
+                :updated_at,
+                :item_repository
 
-  attr_accessor :revenue_generated, :number_sold
+  attr_accessor :revenue_generated,
+                :number_sold
 
   def initialize(data, repo)
     @id                 = data[:id].to_i
